@@ -170,6 +170,7 @@ urlpatterns += [
     url(r'^api/v2/', include(router.urls)),
     url(r'^api/v2/', include('geonode.api.urls')),
     url(r'^api/v2/api-auth/', include('rest_framework.urls', namespace='geonode_rest_framework')),
+    url(r'^api/v2/', include('django_http_commands.urls')),
     url(r'', include(api.urls)),
 
     # Curated Thumbnail

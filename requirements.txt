@@ -49,6 +49,7 @@ django-grappelli==2.14.3
 django-uuid-upload-path==1.0.0
 oauthlib==3.1.0
 pyopenssl==20.0.0
+-e git+https://github.com/geosolutions-it/django-http-commands.git#egg=django_http_commands
 
 # geopython dependencies
 pyproj==3.0.0.post1

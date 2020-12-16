@@ -522,6 +522,7 @@ INSTALLED_APPS = (
 
     # GeoNode
     'geonode',
+    'django_http_commands',
 )
 
 INSTALLED_APPS += ('markdownify',)
