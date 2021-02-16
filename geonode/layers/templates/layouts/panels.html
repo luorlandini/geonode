@@ -378,6 +378,7 @@ span.grippy::after {
                     <div class="panel-body">
                         <div class="" id="mdinfo">
                             <div class="">
+                                {% block layer_attributes %}
                                 <div class="col-lg-4">
                                     <div>
                                         <span><label for="{{ layer_form.language|id }}">{{ layer_form.language.label }}</label></span>
@@ -398,6 +399,8 @@ span.grippy::after {
                                         {{ layer_form.attribution }}
                                     </div>
                                 </div>
+                                {% endblock %}
+                                {% block layer_regions %}
                                 <div class="col-lg-4">
                                       <div id="regions_multiselect_container">
                                           <span><label for="{{ layer_form.regions|id }}">{{ layer_form.regions.label }}</label></span>
@@ -409,8 +412,10 @@ span.grippy::after {
                                           {{ layer_form.data_quality_statement }}
                                       </div>
                                 </div>
+                                {% endblock %}
+                                {% block layer_constraints %}
                                 <div class="col-lg-4">
-                                    <div>
+                                    <div>asd
                                         <span><label for="{{ layer_form.restriction_code_type|id }}">{{ layer_form.restriction_code_type.label }}</label></span>
                                         <!--<p class="xxs-font-size">(Limitation/s placed upon the access or use of data)</p>-->
                                         {{ layer_form.restriction_code_type }}
@@ -421,6 +426,7 @@ span.grippy::after {
                                         {{ layer_form.constraints_other }}
                                     </div>
                                 </div>
+                                {% endblock %}
                             </div>
                             <div class="row">
 

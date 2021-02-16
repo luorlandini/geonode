@@ -312,8 +312,8 @@ STATICFILES_DIRS = os.getenv('STATICFILES_DIRS', _DEFAULT_STATICFILES_DIRS)
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
@@ -456,6 +456,7 @@ GEONODE_APPS = GEONODE_CORE_APPS + GEONODE_INTERNAL_APPS + GEONODE_CONTRIB_APPS
 
 INSTALLED_APPS = (
 
+    'rndt',
     # Boostrap admin theme
     # 'django_admin_bootstrapped.bootstrap3',
     # 'django_admin_bootstrapped',
@@ -710,7 +711,7 @@ TEMPLATES = [
     {
         'NAME': 'GeoNode Project Templates',
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(PROJECT_ROOT, "templates")],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -725,7 +726,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'geonode.context_processors.resource_urls',
                 'geonode.geoserver.context_processors.geoserver_urls',
-                'geonode.themes.context_processors.custom_theme'
+                'geonode.themes.context_processors.custom_theme',
+                'rndt.context_processors.rndt_tags'
             ],
             # Either remove APP_DIRS or remove the 'loaders' option.
             # 'loaders': [
@@ -2122,3 +2124,4 @@ SEARCH_RESOURCES_EXTENDED = strtobool(os.getenv('SEARCH_RESOURCES_EXTENDED', 'Tr
 # -- END Settings for MONITORING plugin
 
 CATALOG_METADATA_TEMPLATE = os.getenv("CATALOG_METADATA_TEMPLATE", "catalogue/full_metadata.xml")
+
