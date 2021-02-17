@@ -229,18 +229,20 @@ span.grippy::after {
 
 <div class="tab-content">
 <div id="edit-metadata" class="tab-content tab-pane fade in active">
+{% block edit_progress %}
   <div id="completeness-hints" class="progress">
-
-  <div class="mandatory-hint progress-bar" role="progressbar" style="width:25%">
-    {% trans "Mandatory" %}
+    <div class="mandatory-hint progress-bar" role="progressbar" style="width:25%">
+      {% trans "Mandatory" %}
+    </div>
+    <div class="advanced-hint progress-bar" role="progressbar" style="width:25%">
+      {% trans "Mandatory" %}
+    </div>
+    <div class="progress-bar" role="progressbar" style="width:50%">
+      {% trans "Optional" %}
+    </div>
   </div>
-  <div class="advanced-hint progress-bar" role="progressbar" style="width:25%">
-    {% trans "Mandatory" %}
-  </div>
-  <div class="progress-bar" role="progressbar" style="width:50%">
-    {% trans "Optional" %}
-  </div>
-</div>
+  {% endblock edit_progress %}
+  {% block breadcrumbs %}
   <ul class="wizard--progress wizard--progress--medium">
       <li data-step="1" id="first" class="is-active" data-toggle="tab" href="#mandatory">
           <a>{% trans "Basic Metadata" %}</a>
@@ -255,6 +257,8 @@ span.grippy::after {
           <a>{% trans "Dataset Attributes" %}</a>
       </li>
   </ul>
+  {% endblock breadcrumbs %}
+  {% block mandatory %}
     <div id="mandatory" class="tab-pane fade in active">
         <!--<br />-->
         <div class="panel-group">
@@ -370,7 +374,8 @@ span.grippy::after {
             </div>
         </div>
     </div>
-
+    {% endblock %}
+    {% block advanced %}
     <div id="advanced" class="tab-pane fade">
         <div class="panel-group">
                 <div class="panel panel-default">
@@ -437,6 +442,9 @@ span.grippy::after {
         </div>
     </div>
 
+    {% endblock %}
+    {% block other_tab %}{% endblock other_tab %}
+    {% block ownership %}
     <div id="ownership" class="tab-pane fade">
         <div class="panel-group"><div class="panel panel-default"><div class="panel-body">
         <div>
@@ -535,6 +543,8 @@ span.grippy::after {
         </div>
       </div></div></div>
     </div>
+    {% endblock %}
+    {% block dataset %}
     <div id="dataset" class="tab-pane fade">
       <div class="panel-group"><div class="panel panel-default"><div class="panel-body">
         <div>
@@ -585,6 +595,7 @@ span.grippy::after {
         </div>
       </div>
     </div>
+    {% endblock %}
   </div>
 </div>
 <div id="preview" class="tab-pane fade" style="overflow: hidden;">
