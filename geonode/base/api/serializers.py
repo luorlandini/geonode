@@ -17,7 +17,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #########################################################################
-from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 
@@ -26,7 +25,6 @@ from rest_framework_gis import fields
 from dynamic_rest.serializers import DynamicEphemeralSerializer, DynamicModelSerializer
 from dynamic_rest.fields.fields import DynamicRelationField, DynamicComputedField
 
-from urllib.parse import urljoin
 from avatar.templatetags.avatar_tags import avatar_url
 
 from geonode.base.models import (
@@ -36,10 +34,15 @@ from geonode.base.models import (
     RestrictionCodeType,
     License,
     TopicCategory,
-    SpatialRepresentationType
+    SpatialRepresentationType,
+    ThesaurusKeyword,
 )
+from geonode.groups.models import (
+    GroupCategory,
+    GroupProfile)
 
-from geonode.groups.models import GroupCategory, GroupProfile
+from geonode.base.utils import build_absolute_uri
+from geonode.security.utils import get_resources_with_perms
 
 import logging
 
@@ -47,11 +50,11 @@ logger = logging.getLogger(__name__)
 
 
 class ResourceBaseTypesSerializer(DynamicEphemeralSerializer):
+    name = serializers.CharField()
+    count = serializers.IntegerField()
 
     class Meta:
-        name = 'resource-type'
-
-    resource_types = serializers.ListField()
+        name = 'resource-types'
 
 
 class PermSpecSerialiazer(DynamicEphemeralSerializer):
@@ -88,7 +91,7 @@ class GroupProfileSerializer(DynamicModelSerializer):
         many=True, slug_field='slug', queryset=GroupCategory.objects.all())
 
 
-class HierarchicalKeywordSerializer(DynamicModelSerializer):
+class SimpleHierarchicalKeywordSerializer(DynamicModelSerializer):
 
     class Meta:
         model = HierarchicalKeyword
@@ -99,7 +102,7 @@ class HierarchicalKeywordSerializer(DynamicModelSerializer):
         return {'name': value.name, 'slug': value.slug}
 
 
-class RegionSerializer(DynamicModelSerializer):
+class SimpleRegionSerializer(DynamicModelSerializer):
 
     class Meta:
         model = Region
@@ -107,7 +110,7 @@ class RegionSerializer(DynamicModelSerializer):
         fields = ('code', 'name')
 
 
-class TopicCategorySerializer(DynamicModelSerializer):
+class SimpleTopicCategorySerializer(DynamicModelSerializer):
 
     class Meta:
         model = TopicCategory
@@ -146,7 +149,7 @@ class AvatarUrlField(DynamicComputedField):
         super(AvatarUrlField, self).__init__(**kwargs)
 
     def get_attribute(self, instance):
-        return avatar_url(instance, self.avatar_size)
+        return build_absolute_uri(avatar_url(instance, self.avatar_size))
 
 
 class EmbedUrlField(DynamicComputedField):
@@ -157,9 +160,18 @@ class EmbedUrlField(DynamicComputedField):
     def get_attribute(self, instance):
         _instance = instance.get_real_instance()
         if hasattr(_instance, 'embed_url') and _instance.embed_url != NotImplemented:
-            return _instance.embed_url
+            return build_absolute_uri(_instance.embed_url)
         else:
             return ""
+
+
+class DetailUrlField(DynamicComputedField):
+
+    def __init__(self, **kwargs):
+        super(DetailUrlField, self).__init__(**kwargs)
+
+    def get_attribute(self, instance):
+        return build_absolute_uri(instance.detail_url)
 
 
 class ThumbnailUrlField(DynamicComputedField):
@@ -176,9 +188,7 @@ class ThumbnailUrlField(DynamicComputedField):
             except Exception as e:
                 logger.exception(e)
 
-        if thumbnail_url and 'http' not in thumbnail_url:
-            thumbnail_url = urljoin(settings.SITEURL, thumbnail_url)
-        return thumbnail_url
+        return build_absolute_uri(thumbnail_url)
 
 
 class UserSerializer(DynamicModelSerializer):
@@ -187,7 +197,7 @@ class UserSerializer(DynamicModelSerializer):
         ref_name = 'UserProfile'
         model = get_user_model()
         name = 'user'
-        fields = ('pk', 'username', 'first_name', 'last_name', 'avatar')
+        fields = ('pk', 'username', 'first_name', 'last_name', 'avatar', 'perms')
 
     @classmethod
     def setup_eager_loading(cls, queryset):
@@ -250,7 +260,7 @@ class ResourceBaseSerializer(DynamicModelSerializer):
         self.fields['featured'] = serializers.BooleanField()
         self.fields['is_published'] = serializers.BooleanField()
         self.fields['is_approved'] = serializers.BooleanField()
-        self.fields['detail_url'] = serializers.CharField(read_only=True)
+        self.fields['detail_url'] = DetailUrlField(read_only=True)
         self.fields['created'] = serializers.DateTimeField(read_only=True)
         self.fields['last_updated'] = serializers.DateTimeField(read_only=True)
         self.fields['raw_abstract'] = serializers.CharField(read_only=True)
@@ -258,15 +268,17 @@ class ResourceBaseSerializer(DynamicModelSerializer):
         self.fields['raw_constraints_other'] = serializers.CharField(read_only=True)
         self.fields['raw_supplemental_information'] = serializers.CharField(read_only=True)
         self.fields['raw_data_quality_statement'] = serializers.CharField(read_only=True)
+        self.fields['metadata_only'] = serializers.BooleanField()
+        self.fields['processed'] = serializers.BooleanField(read_only=True)
 
         self.fields['embed_url'] = EmbedUrlField()
         self.fields['thumbnail_url'] = ThumbnailUrlField()
         self.fields['keywords'] = DynamicRelationField(
-            HierarchicalKeywordSerializer, embed=False, many=True)
+            SimpleHierarchicalKeywordSerializer, embed=False, many=True)
         self.fields['regions'] = DynamicRelationField(
-            RegionSerializer, embed=True, many=True, read_only=True)
+            SimpleRegionSerializer, embed=True, many=True, read_only=True)
         self.fields['category'] = DynamicRelationField(
-            TopicCategorySerializer, embed=True, many=False)
+            SimpleTopicCategorySerializer, embed=True, many=False)
         self.fields['restriction_code_type'] = DynamicRelationField(
             RestrictionCodeTypeSerializer, embed=True, many=False)
         self.fields['license'] = DynamicRelationField(
@@ -278,7 +290,7 @@ class ResourceBaseSerializer(DynamicModelSerializer):
         model = ResourceBase
         name = 'resource'
         fields = (
-            'pk', 'uuid', 'resource_type', 'polymorphic_ctype_id',
+            'pk', 'uuid', 'resource_type', 'polymorphic_ctype_id', 'perms',
             'owner', 'poc', 'metadata_author',
             'keywords', 'regions', 'category',
             'title', 'abstract', 'attribution', 'doi', 'alternate', 'bbox_polygon', 'll_bbox_polygon', 'srid',
@@ -289,9 +301,75 @@ class ResourceBaseSerializer(DynamicModelSerializer):
             'popular_count', 'share_count', 'rating', 'featured', 'is_published', 'is_approved',
             'detail_url', 'embed_url', 'created', 'last_updated',
             'raw_abstract', 'raw_purpose', 'raw_constraints_other',
-            'raw_supplemental_information', 'raw_data_quality_statement'
+            'raw_supplemental_information', 'raw_data_quality_statement', 'metadata_only', 'processed'
             # TODO
             # csw_typename, csw_schema, csw_mdsource, csw_insert_date, csw_type, csw_anytext, csw_wkt_geometry,
             # metadata_uploaded, metadata_uploaded_preserve, metadata_xml,
             # users_geolimits, groups_geolimits
         )
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        data = super(ResourceBaseSerializer, self).to_representation(instance)
+        if request:
+            data['perms'] = instance.get_user_perms(request.user).union(
+                instance.get_self_resource().get_user_perms(request.user)
+            )
+        return data
+
+
+class BaseResourceCountSerializer(DynamicModelSerializer):
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        filter_options = {}
+        if request.query_params:
+            filter_options = {
+                'type_filter': request.query_params.get('type'),
+                'title_filter': request.query_params.get('title__icontains')
+                }
+        data = super(BaseResourceCountSerializer, self).to_representation(instance)
+        count_filter = {self.Meta.count_type: instance}
+        data['count'] = get_resources_with_perms(
+            request.user, filter_options).filter(**count_filter).count()
+        return data
+
+
+class HierarchicalKeywordSerializer(BaseResourceCountSerializer):
+
+    class Meta(SimpleHierarchicalKeywordSerializer.Meta):
+        name = 'keywords'
+        count_type = 'keywords'
+        fields = '__all__'
+
+
+class ThesaurusKeywordSerializer(BaseResourceCountSerializer):
+
+    class Meta:
+        model = ThesaurusKeyword
+        name = 'tkeywords'
+        count_type = 'tkeywords'
+        fields = '__all__'
+
+
+class RegionSerializer(BaseResourceCountSerializer):
+
+    class Meta(SimpleRegionSerializer.Meta):
+        name = 'regions'
+        count_type = 'regions'
+        fields = '__all__'
+
+
+class TopicCategorySerializer(BaseResourceCountSerializer):
+
+    class Meta(SimpleTopicCategorySerializer.Meta):
+        name = 'categories'
+        count_type = 'category'
+        fields = '__all__'
+
+
+class OwnerSerializer(BaseResourceCountSerializer, UserSerializer):
+
+    class Meta(UserSerializer.Meta):
+        name = 'owners'
+        count_type = 'owner'

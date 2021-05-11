@@ -19,49 +19,44 @@
 #########################################################################
 import logging
 import traceback
+import operator
 
+from functools import reduce
+from django.db.models import Q
 from django.conf import settings
-from django.contrib.auth.models import Group
+from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
 
 from geonode.groups.conf import settings as groups_settings
 
 from guardian.shortcuts import (
     assign_perm,
     get_anonymous_user,
-    get_groups_with_perms
+    get_groups_with_perms,
+    get_perms
 )
 
 from geonode.groups.models import GroupProfile
+
+from .permissions import (
+    ADMIN_PERMISSIONS,
+    LAYER_ADMIN_PERMISSIONS,
+    VIEW_PERMISSIONS,
+)
 
 from .utils import (
     get_users_with_perms,
     set_owner_permissions,
     remove_object_permissions,
     purge_geofence_layer_rules,
-    sync_geofence_with_guardian
+    sync_geofence_with_guardian,
+    get_user_obj_perms_model
 )
 
 logger = logging.getLogger("geonode.security.models")
-
-VIEW_PERMISSIONS = [
-    'view_resourcebase',
-    'download_resourcebase',
-]
-
-ADMIN_PERMISSIONS = [
-    'change_resourcebase_metadata',
-    'change_resourcebase',
-    'delete_resourcebase',
-    'change_resourcebase_permissions',
-    'publish_resourcebase',
-]
-
-LAYER_ADMIN_PERMISSIONS = [
-    'change_layer_data',
-    'change_layer_style'
-]
 
 
 class PermissionLevelError(Exception):
@@ -91,7 +86,7 @@ class PermissionLevelMixin(object):
                     if managers:
                         for manager in managers:
                             if manager not in users and not manager.is_superuser and \
-                            manager != resource.owner:
+                                    manager != resource.owner:
                                 for perm in ADMIN_PERMISSIONS + VIEW_PERMISSIONS:
                                     assign_perm(perm, manager, resource)
                                 users[manager] = ADMIN_PERMISSIONS + VIEW_PERMISSIONS
@@ -105,7 +100,7 @@ class PermissionLevelMixin(object):
                 if managers:
                     for manager in managers:
                         if manager not in users and not manager.is_superuser and \
-                        manager != resource.owner:
+                                manager != resource.owner:
                             for perm in ADMIN_PERMISSIONS + VIEW_PERMISSIONS:
                                 assign_perm(perm, manager, resource)
                             users[manager] = ADMIN_PERMISSIONS + VIEW_PERMISSIONS
@@ -147,6 +142,7 @@ class PermissionLevelMixin(object):
             pass
         return self
 
+    @transaction.atomic
     def set_default_permissions(self, owner=None):
         """
         Remove all the permissions except for the owner and assign the
@@ -159,7 +155,7 @@ class PermissionLevelMixin(object):
             if groups_settings.AUTO_ASSIGN_REGISTERED_MEMBERS_TO_REGISTERED_MEMBERS_GROUP_NAME:
                 _members_group_name = groups_settings.REGISTERED_MEMBERS_GROUP_NAME
                 if (settings.RESOURCE_PUBLISHING or settings.ADMIN_MODERATE_UPLOADS) and \
-                _members_group_name == user_group.name:
+                        _members_group_name == user_group.name:
                     return True
             return False
 
@@ -242,6 +238,7 @@ class PermissionLevelMixin(object):
                 if anonymous_can_download:
                     sync_geofence_with_guardian(self.layer, perms, user=None, group=None)
 
+    @transaction.atomic
     def set_permissions(self, perm_spec, created=False):
         """
         Sets an object's the permission levels based on the perm_spec JSON.
@@ -348,6 +345,7 @@ class PermissionLevelMixin(object):
                     if self.polymorphic_ctype.name == 'layer':
                         sync_geofence_with_guardian(self.layer, perms)
 
+    @transaction.atomic
     def set_workflow_perms(self, approved=False, published=False):
         """
                           |  N/PUBLISHED   | PUBLISHED
@@ -388,3 +386,62 @@ class PermissionLevelMixin(object):
             if settings.OGC_SERVER['default'].get("GEOFENCE_SECURITY_ENABLED", False):
                 if self.polymorphic_ctype.name == 'layer':
                     sync_geofence_with_guardian(self.layer, VIEW_PERMISSIONS)
+
+    def get_user_perms(self, user):
+        """
+        Returns a list of permissions a user has on a given resource
+        """
+        # To avoid circular import
+        from geonode.base.models import Configuration
+
+        config = Configuration.load()
+        ctype = ContentType.objects.get_for_model(self)
+        PERMISSIONS_TO_FETCH = VIEW_PERMISSIONS + ADMIN_PERMISSIONS + LAYER_ADMIN_PERMISSIONS
+
+        resource_perms = Permission.objects.filter(
+            codename__in=PERMISSIONS_TO_FETCH,
+            content_type_id=ctype.id
+        ).values_list('codename', flat=True)
+
+        # Don't filter for admin users
+        if not (user.is_superuser or user.is_staff):
+            user_model = get_user_obj_perms_model(self)
+            user_resource_perms = user_model.objects.filter(
+                object_pk=self.pk,
+                content_type_id=ctype.id,
+                user__username=str(user),
+                permission__codename__in=resource_perms
+            )
+            # get user's implicit perms for anyone flag
+            implicit_perms = get_perms(user, self)
+
+            resource_perms = user_resource_perms.union(
+                user_model.objects.filter(permission__codename__in=implicit_perms)
+            ).values_list('permission__codename', flat=True)
+
+        # filter out permissions for edit, change or publish if readonly mode is active
+        perm_prefixes = ['change', 'delete', 'publish']
+        if config.read_only:
+            clauses = (Q(codename__contains=prefix) for prefix in perm_prefixes)
+            query = reduce(operator.or_, clauses)
+            if (user.is_superuser or user.is_staff):
+                resource_perms = resource_perms.exclude(query)
+            else:
+                perm_objects = Permission.objects.filter(codename__in=resource_perms)
+                resource_perms = perm_objects.exclude(query).values_list('codename', flat=True)
+
+        return resource_perms
+
+    def user_can(self, user, permission):
+        """
+        Checks if a has a given permission to the resource
+        """
+        resource = self.get_self_resource()
+        user_perms = self.get_user_perms(user).union(resource.get_user_perms(user))
+
+        if permission not in user_perms:
+            # TODO cater for permissions with syntax base.permission_codename
+            # eg 'base.change_resourcebase'
+            return False
+
+        return True

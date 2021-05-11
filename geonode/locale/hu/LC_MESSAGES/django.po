@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GeoNode\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 14:49+0000\n"
+"POT-Creation-Date: 2021-04-29 08:35+0000\n"
 "PO-Revision-Date: 2016-08-23 13:57+0000\n"
 "Last-Translator: Julien Collaer <julien.collaer@opengeode.be>\n"
 "Language-Team: Hungarian (http://www.transifex.com/geonode/geonode/language/"
@@ -150,9 +150,6 @@ msgstr "adatok frissítése háromhavonta"
 msgid "No information provided"
 msgstr "Nem adott tájékoztatást"
 
-msgid "Category"
-msgstr "Kategória"
-
 msgid "Category is required."
 msgstr "Kategória szükséges."
 
@@ -223,6 +220,9 @@ msgstr "Régiók"
 #| msgid "Groups"
 msgid "Group"
 msgstr "Csoportok"
+
+msgid "Category"
+msgstr "Kategória"
 
 msgid "License"
 msgstr "Engedély"
@@ -477,6 +477,12 @@ msgstr ""
 msgid "Resource Type"
 msgstr "Erőforrás"
 
+msgid "Metadata"
+msgstr ""
+
+msgid "If true, will be excluded from search"
+msgstr ""
+
 msgid "For example \"kml\""
 msgstr "Például a \"kml\""
 
@@ -573,9 +579,6 @@ msgstr ""
 msgid "offline"
 msgstr ""
 
-msgid "Layer not ready yet. Still finalizing layer ingestion..."
-msgstr ""
-
 msgid "SECURITY NOT YET SYNCHRONIZED"
 msgstr ""
 
@@ -599,9 +602,6 @@ msgstr "Térkép megtekintése"
 msgid "Batch Edit"
 msgstr ""
 
-msgid "batch edit"
-msgstr ""
-
 msgid "Cancel"
 msgstr "Mégsem"
 
@@ -611,11 +611,6 @@ msgstr "Küldés"
 #, fuzzy
 #| msgid "Set permissions"
 msgid "Set Permissions"
-msgstr "Engedélyek beállítása"
-
-#, fuzzy
-#| msgid "Set permissions"
-msgid "set permissions"
 msgstr "Engedélyek beállítása"
 
 msgid "Discover the available datasets."
@@ -731,34 +726,6 @@ msgstr "Leírás"
 msgid "GeoNode Client Library"
 msgstr "GeoNode Segítség"
 
-msgid "Explore Maps"
-msgstr "Fedezze Maps"
-
-msgid "Edit Map"
-msgstr "Térkép szerkesztése"
-
-msgid "Update"
-msgstr "Frissítés"
-
-msgid "Create a New Map"
-msgstr "Új térkép létrehozása"
-
-#, fuzzy
-#| msgid "Available styles"
-msgid "Available layers"
-msgstr "Elérhető stílusok"
-
-msgid "Save"
-msgstr "Mentés"
-
-#, fuzzy
-#| msgid "Create a Map"
-msgid "Save Map"
-msgstr "Hozzon létre egy Map"
-
-msgid "Close"
-msgstr "Közel"
-
 msgid ""
 "Flora and/or fauna in natural environment. Examples: wildlife, vegetation, "
 "biological sciences, ecology, wilderness, sealife, wetlands, habitat."
@@ -779,7 +746,7 @@ msgid ""
 "climate, atmospheric conditions, climate change, precipitation."
 msgstr ""
 
-msgid "Climate"
+msgid "Climatology Meteorology Atmosphere"
 msgstr ""
 
 msgid ""
@@ -795,6 +762,9 @@ msgstr ""
 msgid ""
 "Height above or below sea level. Examples: altitude, bathymetry, digital "
 "elevation models, slope, derived products."
+msgstr ""
+
+msgid "Elevation"
 msgstr ""
 
 msgid ""
@@ -825,8 +795,10 @@ msgid ""
 "erosion."
 msgstr ""
 
-msgid "Geoscience"
-msgstr ""
+#, fuzzy
+#| msgid "Supplemental Information"
+msgid "Geoscientific Information"
+msgstr "Kiegészítő információ"
 
 msgid ""
 "Health, health services, human ecology, and safety. Examples: disease and "
@@ -842,10 +814,13 @@ msgid ""
 "images, annotations."
 msgstr ""
 
+msgid "Imagery Base Maps Earth Cover"
+msgstr ""
+
 msgid ""
-"Base MapsInland water features, drainage systems and their characteristics. "
-"Examples: rivers and glaciers, salt lakes, water utilization plans, dams, "
-"currents, floods, water quality, hydrographic charts."
+"Inland water features, drainage systems and their characteristics. Examples: "
+"rivers and glaciers, salt lakes, water utilization plans, dams, currents, "
+"floods, water quality, hydrographic charts."
 msgstr ""
 
 msgid "Inland Waters"
@@ -856,12 +831,15 @@ msgid ""
 "grounds, military transportation, information collection."
 msgstr ""
 
-msgid "Intelligence"
+msgid "Intelligence Military"
 msgstr ""
 
 msgid ""
 "Positional information and services. Examples: addresses, geodetic networks, "
 "control points, postal zones and services, place names."
+msgstr ""
+
+msgid "Location"
 msgstr ""
 
 msgid ""
@@ -877,7 +855,7 @@ msgid ""
 "Examples: land use maps, zoning maps, cadastral surveys, land ownership."
 msgstr ""
 
-msgid "Planning"
+msgid "Planning Cadastre"
 msgstr ""
 
 msgid ""
@@ -929,10 +907,8 @@ msgid ""
 "telecommunication, radio, communication networks."
 msgstr ""
 
-#, fuzzy
-#| msgid "User Activities"
-msgid "Utilities"
-msgstr "Felhasználói tevékenységek"
+msgid "Utilities Communication"
+msgstr ""
 
 #, fuzzy
 #| msgid "Documents related to this map"
@@ -1061,11 +1037,6 @@ msgstr "Az URL a dokumentum, ha a külső."
 msgid "URL"
 msgstr "URL"
 
-#, fuzzy
-#| msgid "Documents"
-msgid "documents"
-msgstr "Dokumentumok"
-
 msgid "Your browser does not support the audio element."
 msgstr ""
 
@@ -1106,9 +1077,6 @@ msgstr "Dokumentum szerkesztése"
 msgid "Request change"
 msgstr ""
 
-msgid "Metadata"
-msgstr ""
-
 msgid "Wizard"
 msgstr ""
 
@@ -1125,6 +1093,9 @@ msgstr ""
 
 msgid "Remove"
 msgstr "Eltávolít"
+
+msgid "Close"
+msgstr "Közel"
 
 msgid "Download Metadata"
 msgstr "Download Metadata"
@@ -1175,11 +1146,6 @@ msgstr "Fedezze fel a dokumentumok"
 msgid "Upload Documents"
 msgstr "Dokumentumok feltöltése"
 
-#, fuzzy
-#| msgid "dataset"
-msgid "data"
-msgstr "adatbázisba"
-
 #, python-format
 msgid "for %(document_title)s"
 msgstr ""
@@ -1206,6 +1172,9 @@ msgstr "Metaadatok Szolgáltató"
 msgid "<< Back"
 msgstr ""
 
+msgid "Update"
+msgstr "Frissítés"
+
 #, fuzzy
 #| msgid "Next"
 msgid "Next >>"
@@ -1220,6 +1189,9 @@ msgid "Edit Metadata"
 msgstr "Metaadatok szerkesztése"
 
 msgid "Editing details for"
+msgstr ""
+
+msgid "Return to Document"
 msgstr ""
 
 msgid "Deleting"
@@ -1337,17 +1309,12 @@ msgid "Responsible and Permissions"
 msgstr "Változás réteg Engedélyek"
 
 #, fuzzy
-#| msgid "Message Inbox"
-msgid "Message box"
-msgstr "Bejövő üzenetek"
-
-msgid "OK"
-msgstr ""
-
-#, fuzzy
 #| msgid "Public"
 msgid "Publishing"
 msgstr "Nyilvános"
+
+msgid "You are not allowed to view this document."
+msgstr "Nem tekintheted meg ezt a dokumentumot."
 
 msgid "You are not permitted to delete this document"
 msgstr "Ön nem jogosult törölni a dokumentum"
@@ -1373,9 +1340,6 @@ msgstr "Nem biztosított"
 #| msgid "Page Not Found"
 msgid "Not found"
 msgstr "Az oldal nem található"
-
-msgid "You are not allowed to view this document."
-msgstr "Nem tekintheted meg ezt a dokumentumot."
 
 #, fuzzy
 #| msgid "Set permissions for this resource"
@@ -1549,11 +1513,6 @@ msgid "%(GEONODE_APPS_NAME)s"
 msgstr ""
 
 #, fuzzy
-#| msgid "GeoExplorer"
-msgid "apps explore"
-msgstr "GeoExplorer"
-
-#, fuzzy
 #| msgid "Create a New Map"
 msgid "Create New"
 msgstr "Új térkép létrehozása"
@@ -1706,6 +1665,11 @@ msgstr "Képesség"
 
 msgid "Create"
 msgstr "Teremt"
+
+#, fuzzy
+#| msgid "Not provided"
+msgid "No title provided"
+msgstr "Nem biztosított"
 
 #, fuzzy
 #| msgid "Not provided"
@@ -1871,11 +1835,6 @@ msgid "Explore Group Categories"
 msgstr "Fedezze fel a csoportok"
 
 #, fuzzy
-#| msgid "Categories"
-msgid "groups explore"
-msgstr "Kategóriák"
-
-#, fuzzy
 #| msgid "Create a Group"
 msgid "Create a New Group Category"
 msgstr "Csoport létrehozása"
@@ -1894,16 +1853,6 @@ msgstr "Csoport törlése"
 
 msgid "Create Group"
 msgstr "Csoport létrehozása"
-
-#, fuzzy
-#| msgid "A Map was created"
-msgid "groups create"
-msgstr "A Map jött létre"
-
-#, fuzzy
-#| msgid "group"
-msgid "groups"
-msgstr "csoport"
 
 #, fuzzy
 #| msgid "last modified"
@@ -1982,9 +1931,6 @@ msgstr "Új tagok"
 msgid "Add Group Members"
 msgstr "Kezelése Klub tagok"
 
-msgid "groups remove"
-msgstr ""
-
 #, python-format
 msgid ""
 "\n"
@@ -1999,11 +1945,6 @@ msgstr "Távolítsuk Maps / Adatok Group"
 
 msgid "Remove selected maps/data"
 msgstr "Távolítsuk el a kiválasztott térképek / adatok"
-
-#, fuzzy
-#| msgid "updated"
-msgid "groups update"
-msgstr "korszerűsített"
 
 #, fuzzy
 #| msgid "Edit Group Details"
@@ -2028,16 +1969,19 @@ msgstr "Csoport létrehozása"
 msgid "Edit Group Category"
 msgstr "Csoport létrehozása"
 
-#, python-format
-msgid "The e-mail address '%(email)s' has already been invited."
+msgid "Save"
+msgstr "Mentés"
+
+#, python-brace-format
+msgid "The e-mail address '{email}' has already been invited."
 msgstr ""
 
-#, python-format
-msgid "The e-mail address '%(email)s' has already accepted an invite."
+#, python-brace-format
+msgid "The e-mail address '{email}' has already accepted an invite."
 msgstr ""
 
-#, python-format
-msgid "An active user is already using the e-mail address '%(email)s'"
+#, python-brace-format
+msgid "An active user is already using the e-mail address '{email}'"
 msgstr ""
 
 #, fuzzy
@@ -2315,6 +2259,22 @@ msgstr "utolsó módosítás"
 msgid "date when attribute statistics were last updated"
 msgstr "időpont, amikor az attribútum statisztika utolsó frissítés"
 
+#, fuzzy
+#| msgid "Edit Layer"
+msgid "Append to Layer"
+msgstr "Szerkesztés réteg"
+
+msgid "Return to Layer"
+msgstr ""
+
+#, fuzzy
+#| msgid "Edit Service Metadata"
+msgid "Preserve Metadata XML"
+msgstr "Szerkesztés Service Metadata"
+
+msgid "Select the charset or leave default"
+msgstr "Válassza ki a karakterkészlet, vagy hagyja az alapértelmezett"
+
 msgid "Home"
 msgstr "Főoldal"
 
@@ -2323,11 +2283,6 @@ msgstr "Kapcsolattartási forma megváltoztatása"
 
 msgid "Assign a new point of contact to the layers below:"
 msgstr "Rendeljen új kapcsolattartó pontot, hogy a rétegek az alábbi:"
-
-#, fuzzy
-#| msgid "Layers"
-msgid "layers"
-msgstr "Rétegek"
 
 msgid "Layer WMS GetCapabilities document"
 msgstr ""
@@ -2345,9 +2300,6 @@ msgid "Bounding Box"
 msgstr ""
 
 msgid "Time"
-msgstr ""
-
-msgid "Elevation"
 msgstr ""
 
 msgid "Actions"
@@ -2480,6 +2432,9 @@ msgid "Layer"
 msgid_plural "Layers"
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Append Data"
+msgstr ""
 
 msgid "Edit data"
 msgstr ""
@@ -2615,11 +2570,6 @@ msgstr "Ez a művelet érinti a következő térképek:"
 msgid "No maps are using this layer"
 msgstr "Nem térképeket használja ezt a réteget"
 
-#, fuzzy
-#| msgid "A layer was uploaded"
-msgid "layers explore"
-msgstr "A réteget feltöltve"
-
 msgid "Upload Layers"
 msgstr "Feltöltés Rétegek"
 
@@ -2639,9 +2589,6 @@ msgid ""
 "          GeoNode's metadata import supports a subset of ISO, FGDC, and "
 "Dublin Core metadata elements.\n"
 "          Some of your original metadata may have been lost."
-msgstr ""
-
-msgid "Return to Layer"
 msgstr ""
 
 #, python-format
@@ -2669,39 +2616,19 @@ msgstr "Display Order"
 msgid "Visible"
 msgstr "látható?"
 
+msgid "ERROR"
+msgstr ""
+
+msgid "Following items are required:"
+msgstr ""
+
 #, fuzzy
 #| msgid "Upload Layer"
 msgid "Upload Layer Metadata"
 msgstr "Feltöltés réteg"
 
-#, fuzzy
-#| msgid "A layer was uploaded"
-msgid "layers upload"
-msgstr "A réteget feltöltve"
-
 msgid "(XML - ISO, FGDC, ebRIM, Dublin Core)"
 msgstr ""
-
-msgid "Incomplete Uploads"
-msgstr "Hiányos feltöltések"
-
-msgid "You have the following incomplete uploads"
-msgstr "Az alábbi hiányos feltöltések"
-
-msgid "last updated on"
-msgstr "utolsó frissítése"
-
-msgid "Resume"
-msgstr "Folytatás"
-
-msgid "Delete"
-msgstr "Töröl"
-
-msgid "Are you sure you want to delete this upload?"
-msgstr "Biztosan törölni szeretné ezt a feltöltést?"
-
-msgid "Delete, and don't ask me again."
-msgstr "Törlés, és ne kérdezd meg újra."
 
 msgid "Remove Layers"
 msgstr ""
@@ -2716,14 +2643,6 @@ msgstr ""
 
 msgid "Replace Layer"
 msgstr "Cserélje réteg"
-
-#, fuzzy
-#| msgid "Edit Service Metadata"
-msgid "Preserve Metadata XML"
-msgstr "Szerkesztés Service Metadata"
-
-msgid "Select the charset or leave default"
-msgstr "Válassza ki a karakterkészlet, vagy hagyja az alapértelmezett"
 
 msgid "Manage Styles"
 msgstr "Stílusok kezelése"
@@ -2773,12 +2692,64 @@ msgid "Preview"
 msgstr "Preview"
 
 #, fuzzy
+#| msgid "Edit Service Metadata"
+msgid "Required Metadata"
+msgstr "Szerkesztés Service Metadata"
+
+#, fuzzy
 #| msgid "Attributes"
 msgid "Dataset Attributes"
 msgstr "Attribútumok"
 
 msgid "Upload Layer"
 msgstr "Feltöltés réteg"
+
+#, fuzzy
+#| msgid "Download Metadata"
+msgid "Upload status"
+msgstr "Download Metadata"
+
+msgid ""
+"This file needs additional configuration to complete the upload process. "
+"Please click on the button to fill the required configuration"
+msgstr ""
+
+msgid "Delete"
+msgstr "Töröl"
+
+#, fuzzy
+#| msgid "Upload Document"
+msgid "Upload process completed"
+msgstr "Dokumentum feltöltése"
+
+msgid ""
+"The upload process cannot be completed because the original file is no more "
+"available"
+msgstr ""
+
+#, fuzzy
+#| msgid "Create"
+msgid "Created"
+msgstr "Teremt"
+
+msgid "Progress"
+msgstr ""
+
+msgid "page"
+msgstr ""
+
+msgid "of"
+msgstr "Az"
+
+#, fuzzy
+#| msgid "Incomplete Uploads"
+msgid "Delete incomplete upload"
+msgstr "Hiányos feltöltések"
+
+#, fuzzy
+#| msgid "Are you sure you want to delete this upload?"
+msgid "Are you sure you want to remove this incomplete upload?"
+msgstr "Biztosan törölni szeretné ezt a feltöltést?"
 
 #, fuzzy
 #| msgid "Upload Layer Step 2"
@@ -3269,31 +3240,47 @@ msgstr "most"
 msgid "You are attempting to replace a vector layer with an unknown format."
 msgstr ""
 
-msgid "You are attempting to replace a vector layer with a raster."
-msgstr ""
-
-msgid "You are attempting to replace a raster layer with a vector."
-msgstr ""
-
 msgid ""
-"Please ensure the name is consistent with the file you are trying to replace."
+"The UUID identifier from the XML Metadata is already in use in this system."
+msgstr ""
+
+#, python-brace-format
+msgid "You are attempting to {action_type} a vector layer with a raster."
+msgstr ""
+
+#, python-brace-format
+msgid "You are attempting to {action_type} a raster layer with a vector."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"You are attempting to {action_type} a vector layer with an unknown format."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Please ensure the name is consistent with the file you are trying to "
+"{action_type}."
 msgstr ""
 
 msgid "Local GeoNode layer has no geometry type."
 msgstr ""
 
+#, python-brace-format
 msgid ""
 "Please ensure there is at least one geometry "
-"type                                 that is consistent with the file you "
-"are trying to replace."
+"type                             that is consistent with the file you are "
+"trying to {action_type}."
 msgstr ""
 
-#, python-format
-msgid "Some error occurred while trying to access the uploaded schema: %s"
+msgid "The selected Layer does not exists in the catalog."
+msgstr ""
+
+msgid "Please ensure that the layer structure is consistent "
 msgstr ""
 
 msgid ""
-"The UUID identifier from the XML Metadata is already in use in this system."
+"Some error occurred while trying to access the uploaded schema: {str(e)}"
 msgstr ""
 
 msgid ""
@@ -3329,18 +3316,21 @@ msgstr "Ön nem jogosult megtekinteni ezt a réteget"
 msgid "Failed to upload the layer"
 msgstr "Fájlok feltöltését"
 
-#, fuzzy
-#| msgid "Files to be uploaded"
-msgid "Unable to delete layer"
-msgstr "Fájlok feltöltését"
+msgid "You are attempting to replace a vector layer with a raster."
+msgstr ""
+
+msgid "You are attempting to replace a raster layer with a vector."
+msgstr ""
 
 msgid ""
 "This layer is a member of a layer group, you must remove the layer from the "
 "group before deleting."
 msgstr ""
 
-msgid "couldn't generate thumbnail"
-msgstr ""
+#, fuzzy, python-format
+#| msgid "Remote Thumbnail"
+msgid "couldn't generate thumbnail: %s"
+msgstr "Remote Thumbnail"
 
 msgid "Map Created"
 msgstr "Térkép Létrehozva"
@@ -3446,9 +3436,6 @@ msgstr "fólia paraméterek"
 msgid "source params"
 msgstr "forrás paraméterek"
 
-msgid "maps"
-msgstr ""
-
 msgid "Map layers WMS GetCapabilities document"
 msgstr ""
 
@@ -3483,6 +3470,9 @@ msgstr "Másolja ezt a térképet"
 
 msgid "Duplicate this map and modify it for your own purposes"
 msgstr "Másolat ezt a térképet, és módosítsa a saját céljaira"
+
+msgid "Create a New Map"
+msgstr "Új térkép létrehozása"
 
 msgid ""
 "\n"
@@ -3540,10 +3530,11 @@ msgstr "Letöltés Complete"
 msgid "Download Failed"
 msgstr "Download sikerült"
 
-#, fuzzy
-#| msgid "GeoExplorer"
-msgid "maps explore"
-msgstr "GeoExplorer"
+msgid "Edit Map"
+msgstr "Térkép szerkesztése"
+
+msgid "Explore Maps"
+msgstr "Fedezze Maps"
 
 msgid ""
 "Note: this map's orginal metadata was populated by importing a metadata XML "
@@ -3555,6 +3546,11 @@ msgstr ""
 "Megjegyzés: ez a térkép eredetinek metaadat lakott importálásával metaadatok "
 "XML fájl. GeoNode metaadat import egy részét támogatja az ISO, FGDC, és "
 "Dublin Core metaadat elemek. Néhány eredeti metaadatok esetleg elveszett."
+
+#, fuzzy
+#| msgid "Return to"
+msgid "Return to Map"
+msgstr "Vissza a"
 
 msgid "Remove Map"
 msgstr ""
@@ -3587,11 +3583,6 @@ msgstr "Nem engedélyezett, hogy megtekinthesse ezt a térképet."
 
 #, fuzzy
 #| msgid "Thumbnail"
-msgid "Thumbnail saved"
-msgstr "Thumbnail"
-
-#, fuzzy
-#| msgid "Thumbnail"
 msgid "error saving thumbnail"
 msgstr "Thumbnail"
 
@@ -3607,7 +3598,7 @@ msgstr ""
 msgid "Alert situation reported by monitoring"
 msgstr ""
 
-msgid "GeoNode Monitoring on {} reports errors: {}"
+msgid "GeoNode Monitoring on {base_ctx['host']} "
 msgstr ""
 
 #, fuzzy
@@ -3682,7 +3673,8 @@ msgstr "viszonyítási időpont az idézett forrás"
 msgid "Show data for specific label"
 msgstr "viszonyítási időpont az idézett forrás"
 
-msgid "Write result to file, default GEOIP_PATH: {}"
+#, python-brace-format
+msgid "Write result to file, default GEOIP_PATH: {settings.GEOIP_PATH}"
 msgstr ""
 
 msgid ""
@@ -3851,7 +3843,8 @@ msgstr ""
 msgid "Is it active"
 msgstr ""
 
-msgid "{}: {}"
+#, python-brace-format
+msgid "{self.severity}: {self.name}"
 msgstr ""
 
 msgid "Value must be above"
@@ -4085,11 +4078,6 @@ msgstr "Profil létrehozása"
 msgid "Profile of "
 msgstr "Profilja"
 
-#, fuzzy
-#| msgid "GeoExplorer"
-msgid "people explore"
-msgstr "GeoExplorer"
-
 msgid "Not provided."
 msgstr ""
 
@@ -4097,9 +4085,6 @@ msgid "Position"
 msgstr ""
 
 msgid "Organization"
-msgstr ""
-
-msgid "Location"
 msgstr ""
 
 msgid "Not provided"
@@ -4164,11 +4149,6 @@ msgstr "Felhasználói tevékenységek"
 msgid "Resources"
 msgstr "Erőforrás"
 
-#, fuzzy
-#| msgid "Invite people"
-msgid "edit people"
-msgstr "Mások meghívása"
-
 msgid "Edit Your Profile"
 msgstr "Profil szerkesztése"
 
@@ -4184,7 +4164,9 @@ msgstr "Frissítés profil"
 msgid "Explore People"
 msgstr "Fedezze fel az emberek"
 
-msgid "Your username for "
+#, fuzzy, python-brace-format
+#| msgid "Your username for "
+msgid "Your username for {site.name}"
 msgstr "A felhasználónevet"
 
 msgid "Your username has been emailed to you."
@@ -4492,9 +4474,9 @@ msgstr ""
 msgid "Resource is already being processed"
 msgstr ""
 
-#, fuzzy
+#, fuzzy, python-brace-format
 #| msgid "Resources"
-msgid "Resource {} is being processed"
+msgid "Resource {resource_id} is being processed"
 msgstr "Erőforrás"
 
 #, fuzzy
@@ -4510,9 +4492,9 @@ msgstr "Nem megengedett, hogy távolítsa el ezt a szolgáltatást."
 msgid "You are not permitted to remove this service."
 msgstr "Nem megengedett, hogy távolítsa el ezt a szolgáltatást."
 
-#, fuzzy
+#, fuzzy, python-brace-format
 #| msgid "Service has been created:"
-msgid "Service {} has been deleted"
+msgid "Service {service.name} has been deleted"
 msgstr "Szolgáltatás jött létre:"
 
 msgid "created"
@@ -4766,6 +4748,14 @@ msgstr ""
 #| msgid "Delete These"
 msgid "Delete Geo Limits"
 msgstr "Ezek törlése"
+
+#, fuzzy
+#| msgid "Message Inbox"
+msgid "Message box"
+msgstr "Bejövő üzenetek"
+
+msgid "OK"
+msgstr ""
 
 msgid "Mandatory files : SHP , DBF"
 msgstr ""
@@ -5764,22 +5754,11 @@ msgstr "A következő csoportok:"
 msgid "Updating Metadata..."
 msgstr "Download Metadata"
 
-msgid "ERROR"
-msgstr ""
-
 msgid "Topic Category is mandatory and cannot be empty!"
 msgstr ""
 
 msgid "Group is mandatory and cannot be empty!"
 msgstr ""
-
-msgid "Return to Document"
-msgstr ""
-
-#, fuzzy
-#| msgid "Return to"
-msgid "Return to Map"
-msgstr "Vissza a"
 
 msgid "Identification"
 msgstr ""
@@ -5842,6 +5821,9 @@ msgid "Online Link"
 msgstr ""
 
 msgid "* Field declared Mandatory by the Metadata Schema"
+msgstr ""
+
+msgid "Please, fill the following items before clicking on preview:"
 msgstr ""
 
 #, fuzzy
@@ -6243,12 +6225,6 @@ msgstr "yyyy-mm-dd"
 msgid "Date ends before:"
 msgstr "Dátum vége előtt:"
 
-msgid "page"
-msgstr ""
-
-msgid "of"
-msgstr "Az"
-
 #, fuzzy
 #| msgid "Search"
 msgid "Search by region"
@@ -6306,9 +6282,6 @@ msgstr "Z - A"
 
 msgid "Most popular"
 msgstr "Legnépszerűbb"
-
-msgid "Thesaurus"
-msgstr ""
 
 msgid "Text"
 msgstr "Szöveg"
@@ -6458,6 +6431,11 @@ msgid "Choose between using jumbotron background and slide show"
 msgstr ""
 
 #, fuzzy
+#| msgid "All contents"
+msgid "Empty content"
+msgstr "Minden tartalom"
+
+#, fuzzy
 #| msgid "Could not find any layers in a compatible projection."
 msgid "Could not access to uploaded data."
 msgstr "Nem található rétegek kompatibilis vetítés."
@@ -6478,6 +6456,22 @@ msgid "Layer already exists"
 msgstr "Térkép Létrehozva"
 
 msgid "Name already in use and overwrite is False"
+msgstr ""
+
+msgid "Error configuring time:"
+msgstr ""
+
+msgid "The GeoServer Import Session is no more available"
+msgstr ""
+
+#, python-brace-format
+msgid "Expected to find layer named '{name}' in geoserver"
+msgstr ""
+
+msgid "Exception occurred while parsing the provided Metadata file."
+msgstr ""
+
+msgid "Error configuring Layer"
 msgstr ""
 
 msgid "Invalid zip file detected"
@@ -6526,20 +6520,19 @@ msgid ""
 "To support the time step, you must enable the OGC_SERVER DATASTORE option"
 msgstr ""
 
-#, python-format
-msgid "Unsupported file type: %s"
+#, python-brace-format
+msgid "Unsupported file type: {e.message}"
 msgstr ""
 
-#, python-format
-msgid "File does not exist: %s"
+#, python-brace-format
+msgid "File does not exist: {absolute_base_file}"
 msgstr ""
 
-#, python-format
-msgid "unknown item state: %s"
+#, python-brace-format
+msgid "unknown item state: {task.state}"
 msgstr ""
 
-#, python-format
-msgid "error during import: %s"
+msgid "error during import: {progress.get('message')}"
 msgstr ""
 
 #, fuzzy
@@ -6558,3 +6551,118 @@ msgstr "Érvénytelen jogosultsági szint."
 
 msgid "Permission Denied"
 msgstr "Engedély megtagadva"
+
+#, fuzzy
+#~| msgid "Set permissions"
+#~ msgid "set permissions"
+#~ msgstr "Engedélyek beállítása"
+
+#, fuzzy
+#~| msgid "Documents"
+#~ msgid "documents"
+#~ msgstr "Dokumentumok"
+
+#, fuzzy
+#~| msgid "dataset"
+#~ msgid "data"
+#~ msgstr "adatbázisba"
+
+#, fuzzy
+#~| msgid "GeoExplorer"
+#~ msgid "apps explore"
+#~ msgstr "GeoExplorer"
+
+#, fuzzy
+#~| msgid "Categories"
+#~ msgid "groups explore"
+#~ msgstr "Kategóriák"
+
+#, fuzzy
+#~| msgid "A Map was created"
+#~ msgid "groups create"
+#~ msgstr "A Map jött létre"
+
+#, fuzzy
+#~| msgid "group"
+#~ msgid "groups"
+#~ msgstr "csoport"
+
+#, fuzzy
+#~| msgid "updated"
+#~ msgid "groups update"
+#~ msgstr "korszerűsített"
+
+#, fuzzy
+#~| msgid "A layer was uploaded"
+#~ msgid "layers append"
+#~ msgstr "A réteget feltöltve"
+
+#, fuzzy
+#~| msgid "Layers"
+#~ msgid "layers"
+#~ msgstr "Rétegek"
+
+#, fuzzy
+#~| msgid "A layer was uploaded"
+#~ msgid "layers explore"
+#~ msgstr "A réteget feltöltve"
+
+#, fuzzy
+#~| msgid "A layer was uploaded"
+#~ msgid "layers upload"
+#~ msgstr "A réteget feltöltve"
+
+#~ msgid "Incomplete Uploads"
+#~ msgstr "Hiányos feltöltések"
+
+#~ msgid "You have the following incomplete uploads"
+#~ msgstr "Az alábbi hiányos feltöltések"
+
+#~ msgid "Resume"
+#~ msgstr "Folytatás"
+
+#, fuzzy
+#~| msgid "GeoExplorer"
+#~ msgid "maps explore"
+#~ msgstr "GeoExplorer"
+
+#, fuzzy
+#~| msgid "GeoExplorer"
+#~ msgid "people explore"
+#~ msgstr "GeoExplorer"
+
+#, fuzzy
+#~| msgid "Invite people"
+#~ msgid "edit people"
+#~ msgstr "Mások meghívása"
+
+#~ msgid "last updated on"
+#~ msgstr "utolsó frissítése"
+
+#~ msgid "Delete, and don't ask me again."
+#~ msgstr "Törlés, és ne kérdezd meg újra."
+
+#, fuzzy
+#~| msgid "Available styles"
+#~ msgid "Available layers"
+#~ msgstr "Elérhető stílusok"
+
+#, fuzzy
+#~| msgid "Create a Map"
+#~ msgid "Save Map"
+#~ msgstr "Hozzon létre egy Map"
+
+#, fuzzy
+#~| msgid "User Activities"
+#~ msgid "Utilities"
+#~ msgstr "Felhasználói tevékenységek"
+
+#, fuzzy
+#~| msgid "Files to be uploaded"
+#~ msgid "Unable to delete layer"
+#~ msgstr "Fájlok feltöltését"
+
+#, fuzzy
+#~| msgid "Thumbnail"
+#~ msgid "Thumbnail saved"
+#~ msgstr "Thumbnail"

@@ -35,8 +35,14 @@ from rest_framework.test import APITestCase, URLPatternsTestCase
 from guardian.shortcuts import get_anonymous_user
 
 from geonode.api.urls import router
-from geonode.base.models import ResourceBase
-from geonode.base.models import CuratedThumbnail
+from geonode.base.models import (
+    CuratedThumbnail,
+    HierarchicalKeyword,
+    Region,
+    ResourceBase,
+    TopicCategory,
+    ThesaurusKeyword,
+    )
 
 from geonode import geoserver
 from geonode.utils import check_ogc_backend
@@ -44,6 +50,7 @@ from geonode.services.views import services
 from geonode.maps.views import map_embed
 from geonode.layers.views import layer_embed
 from geonode.geoapps.views import geoapp_edit
+from geonode.base.utils import build_absolute_uri
 from geonode.base.populate_test_data import create_models
 
 logger = logging.getLogger(__name__)
@@ -169,6 +176,11 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         self.assertEqual(response.data['user']['username'], 'admin')
         self.assertIsNotNone(response.data['user']['avatar'])
 
+        # anonymous users are not in contributors group
+        url = reverse('users-detail', kwargs={'pk': -1})
+        response = self.client.get(url, format='json')
+        self.assertNotIn('add_resource', response.data['user']['perms'])
+
         # Bobby
         self.assertTrue(self.client.login(username='bobby', password='bob'))
         # Bobby cannot access other users' details
@@ -192,6 +204,21 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         logger.debug(response.data)
         self.assertEqual(response.data['user']['username'], 'bobby')
         self.assertIsNotNone(response.data['user']['avatar'])
+        # default contributor group_perm is returned in perms
+        self.assertIn('add_resource', response.data['user']['perms'])
+
+    def test_register_users(self):
+        """
+        Ensure users are created with default groups.
+        """
+        url = reverse('users-list')
+        user_data = {
+            'username': 'new_user',
+        }
+        response = self.client.post(url, data=user_data, format='json')
+        self.assertEqual(response.status_code, 201)
+        # default contributor group_perm is returned in perms
+        self.assertIn('add_resource', response.data['user']['perms'])
 
     def test_base_resources(self):
         """
@@ -228,7 +255,7 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 5)
-        self.assertEqual(response.data['total'], 26)
+        self.assertEqual(response.data['total'], 18)
         # Pagination
         self.assertEqual(len(response.data['resources']), 10)
         logger.debug(response.data)
@@ -238,7 +265,7 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 5)
-        self.assertEqual(response.data['total'], 20)
+        self.assertEqual(response.data['total'], 18)
         # Pagination
         self.assertEqual(len(response.data['resources']), 10)
         logger.debug(response.data)
@@ -248,7 +275,7 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 5)
-        self.assertEqual(response.data['total'], 19)
+        self.assertEqual(response.data['total'], 18)
         # Pagination
         self.assertEqual(len(response.data['resources']), 10)
         logger.debug(response.data)
@@ -260,9 +287,27 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         response = self.client.get(f"{url}?page_size=17", format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 5)
-        self.assertEqual(response.data['total'], 26)
+        self.assertEqual(response.data['total'], 18)
         # Pagination
         self.assertEqual(len(response.data['resources']), 17)
+
+        # Check user permissions
+        resource = ResourceBase.objects.filter(owner__username='bobby').first()
+        # Admin
+        response = self.client.get(f"{url}/{resource.id}/", format='json')
+        self.assertTrue('change_resourcebase' in list(response.data['resource']['perms']))
+        # Annonymous
+        self.assertIsNone(self.client.logout())
+        response = self.client.get(f"{url}/{resource.id}/", format='json')
+        self.assertFalse('change_resourcebase' in list(response.data['resource']['perms']))
+        # user owner
+        self.assertTrue(self.client.login(username='bobby', password='bob'))
+        response = self.client.get(f"{url}/{resource.id}/", format='json')
+        self.assertTrue('change_resourcebase' in list(response.data['resource']['perms']))
+        # user not owner and not assigned
+        self.assertTrue(self.client.login(username='norman', password='norman'))
+        response = self.client.get(f"{url}/{resource.id}/", format='json')
+        self.assertFalse('change_resourcebase' in list(response.data['resource']['perms']))
 
     def test_search_resources(self):
         """
@@ -292,9 +337,9 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         response = self.client.get(f"{url}?filter{{owner.username}}=bobby", format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 5)
-        self.assertEqual(response.data['total'], 6)
+        self.assertEqual(response.data['total'], 3)
         # Pagination
-        self.assertEqual(len(response.data['resources']), 6)
+        self.assertEqual(len(response.data['resources']), 3)
 
         # Filter by resource_type == document
         response = self.client.get(f"{url}?filter{{resource_type}}=document", format='json')
@@ -418,42 +463,57 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         self.assertTrue(self.client.login(username='admin', password='admin'))
 
         resource = ResourceBase.objects.filter(owner__username='bobby').first()
+        set_perms_url = urljoin(f"{reverse('base-resources-detail', kwargs={'pk': resource.pk})}/", 'set_perms/')
+        get_perms_url = urljoin(f"{reverse('base-resources-detail', kwargs={'pk': resource.pk})}/", 'get_perms/')
 
         url = reverse('base-resources-detail', kwargs={'pk': resource.pk})
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(int(response.data['resource']['pk']), int(resource.pk))
 
-        url = urljoin(f"{reverse('base-resources-detail', kwargs={'pk': resource.pk})}/", 'get_perms/')
-        response = self.client.get(url, format='json')
+        response = self.client.get(get_perms_url, format='json')
         self.assertEqual(response.status_code, 200)
         resource_perm_spec = response.data
         self.assertTrue('bobby' in resource_perm_spec['users'])
         self.assertFalse('norman' in resource_perm_spec['users'])
 
         # Add perms to Norman
-        url = urljoin(f"{reverse('base-resources-detail', kwargs={'pk': resource.pk})}/", 'set_perms/')
         resource_perm_spec['users']['norman'] = resource_perm_spec['users']['bobby']
-        response = self.client.put(url, data=resource_perm_spec, format='json')
+        response = self.client.put(set_perms_url, data=resource_perm_spec, format='json')
         self.assertEqual(response.status_code, 200)
 
-        url = urljoin(f"{reverse('base-resources-detail', kwargs={'pk': resource.pk})}/", 'get_perms/')
-        response = self.client.get(url, format='json')
+        response = self.client.get(get_perms_url, format='json')
         self.assertEqual(response.status_code, 200)
         resource_perm_spec = response.data
         self.assertTrue('norman' in resource_perm_spec['users'])
 
         # Remove perms to Norman
-        url = urljoin(f"{reverse('base-resources-detail', kwargs={'pk': resource.pk})}/", 'set_perms/')
         resource_perm_spec['users']['norman'] = []
-        response = self.client.put(url, data=resource_perm_spec, format='json')
+        response = self.client.put(set_perms_url, data=resource_perm_spec, format='json')
         self.assertEqual(response.status_code, 200)
 
-        url = urljoin(f"{reverse('base-resources-detail', kwargs={'pk': resource.pk})}/", 'get_perms/')
-        response = self.client.get(url, format='json')
+        response = self.client.get(get_perms_url, format='json')
         self.assertEqual(response.status_code, 200)
         resource_perm_spec = response.data
         self.assertFalse('norman' in resource_perm_spec['users'])
+
+        # Ensure get_perms and set_perms are done by users with correct permissions.
+        # logout admin user
+        self.assertIsNone(self.client.logout())
+        # get perms
+        response = self.client.get(get_perms_url, format='json')
+        self.assertEqual(response.status_code, 403)
+        # set perms
+        response = self.client.put(set_perms_url, data=resource_perm_spec, format='json')
+        self.assertEqual(response.status_code, 403)
+        # login resourse owner
+        # get perms
+        self.assertTrue(self.client.login(username='bobby', password='bob'))
+        response = self.client.get(get_perms_url, format='json')
+        self.assertEqual(response.status_code, 200)
+        # set perms
+        response = self.client.put(set_perms_url, data=resource_perm_spec, format='json')
+        self.assertEqual(response.status_code, 200)
 
     def test_featured_and_published_resources(self):
         """
@@ -488,12 +548,13 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         """
         url = urljoin(f"{reverse('base-resources-list')}/", 'resource_types/')
         response = self.client.get(url, format='json')
+        r_type_names = [item['name'] for item in response.data['resource_types']]
         self.assertEqual(response.status_code, 200)
         self.assertTrue('resource_types' in response.data)
-        self.assertTrue('layer' in response.data['resource_types'])
-        self.assertTrue('map' in response.data['resource_types'])
-        self.assertTrue('document' in response.data['resource_types'])
-        self.assertTrue('service' in response.data['resource_types'])
+        self.assertTrue('layer' in r_type_names)
+        self.assertTrue('map' in r_type_names)
+        self.assertTrue('document' in r_type_names)
+        self.assertFalse('service' in r_type_names)
 
     @patch('PIL.Image.open', return_value=test_image)
     def test_thumbnail_urls(self, img):
@@ -533,14 +594,127 @@ class BaseApiTests(APITestCase, URLPatternsTestCase):
         for resource in resources:
             url = reverse('base-resources-detail', kwargs={'pk': resource.pk})
             response = self.client.get(url, format='json')
-            self.assertEqual(response.status_code, 200)
-            self.assertEqual(int(response.data['resource']['pk']), int(resource.pk))
-            embed_url = response.data['resource']['embed_url']
-            self.assertIsNotNone(embed_url)
+            if resource.title.endswith('metadata true'):
+                self.assertEqual(response.status_code, 404)
+            else:
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(int(response.data['resource']['pk']), int(resource.pk))
+                embed_url = response.data['resource']['embed_url']
+                self.assertIsNotNone(embed_url)
 
-            instance = resource.get_real_instance()
-            if hasattr(instance, 'embed_url'):
-                if instance.embed_url != NotImplemented:
-                    self.assertEqual(instance.embed_url, embed_url)
-                else:
-                    self.assertEqual("", embed_url)
+                instance = resource.get_real_instance()
+                if hasattr(instance, 'embed_url'):
+                    if instance.embed_url != NotImplemented:
+                        self.assertEqual(build_absolute_uri(instance.embed_url), embed_url)
+                    else:
+                        self.assertEqual("", embed_url)
+
+    def test_owners_list(self):
+        """
+        Ensure we can access the list of owners.
+        """
+        url = reverse('owners-list')
+        # Anonymous
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], get_user_model().objects.exclude(pk=-1).count())
+
+        # Admin
+        self.assertTrue(self.client.login(username='admin', password='admin'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], get_user_model().objects.exclude(pk=-1).count())
+
+        # Authenticated user
+        self.assertTrue(self.client.login(username='bobby', password='bob'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], get_user_model().objects.exclude(pk=-1).count())
+
+    def test_categories_list(self):
+        """
+        Ensure we can access the list of categories.
+        """
+        url = reverse('categories-list')
+        # Anonymous
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], TopicCategory.objects.count())
+
+        # Admin
+        self.assertTrue(self.client.login(username='admin', password='admin'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], TopicCategory.objects.count())
+
+        # Authenticated user
+        self.assertTrue(self.client.login(username='bobby', password='bob'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], TopicCategory.objects.count())
+
+    def test_regions_list(self):
+        """
+        Ensure we can access the list of regions.
+        """
+        url = reverse('regions-list')
+        # Anonymous
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], Region.objects.count())
+
+        # Admin
+        self.assertTrue(self.client.login(username='admin', password='admin'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], Region.objects.count())
+
+        # Authenticated user
+        self.assertTrue(self.client.login(username='bobby', password='bob'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], Region.objects.count())
+
+    def test_keywords_list(self):
+        """
+        Ensure we can access the list of keywords.
+        """
+        url = reverse('keywords-list')
+        # Anonymous
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], HierarchicalKeyword.objects.count())
+
+        # Admin
+        self.assertTrue(self.client.login(username='admin', password='admin'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], HierarchicalKeyword.objects.count())
+
+        # Authenticated user
+        self.assertTrue(self.client.login(username='bobby', password='bob'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], HierarchicalKeyword.objects.count())
+
+    def test_tkeywords_list(self):
+        """
+        Ensure we can access the list of thasaurus keywords.
+        """
+        url = reverse('tkeywords-list')
+        # Anonymous
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], ThesaurusKeyword.objects.count())
+
+        # Admin
+        self.assertTrue(self.client.login(username='admin', password='admin'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], ThesaurusKeyword.objects.count())
+
+        # Authenticated user
+        self.assertTrue(self.client.login(username='bobby', password='bob'))
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['total'], ThesaurusKeyword.objects.count())

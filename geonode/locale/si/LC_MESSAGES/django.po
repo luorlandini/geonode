@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GeoNode\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 14:49+0000\n"
+"POT-Creation-Date: 2021-04-29 08:35+0000\n"
 "PO-Revision-Date: 2016-08-23 13:57+0000\n"
 "Last-Translator: Julien Collaer <julien.collaer@opengeode.be>\n"
 "Language-Team: Sinhala (http://www.transifex.com/geonode/geonode/language/"
@@ -150,9 +150,6 @@ msgstr "සෑම මාස තුනකට වරක්ම දත්ත යා�
 msgid "No information provided"
 msgstr "තොරතුරු සපයා නොමැත"
 
-msgid "Category"
-msgstr "ප්‍රභේදය"
-
 msgid "Category is required."
 msgstr "ප්රවර්ගය අවශ්ය වේ."
 
@@ -223,6 +220,9 @@ msgstr "කලාප"
 #| msgid "Groups"
 msgid "Group"
 msgstr "කණ්ඩායම්"
+
+msgid "Category"
+msgstr "ප්‍රභේදය"
 
 msgid "License"
 msgstr "බලපත්ර"
@@ -470,6 +470,12 @@ msgstr ""
 msgid "Resource Type"
 msgstr "සම්පත්"
 
+msgid "Metadata"
+msgstr "පාරදත්ත"
+
+msgid "If true, will be excluded from search"
+msgstr ""
+
 msgid "For example \"kml\""
 msgstr "උදාහරණයක් ලෙස \"kml\""
 
@@ -570,9 +576,6 @@ msgstr ""
 msgid "offline"
 msgstr ""
 
-msgid "Layer not ready yet. Still finalizing layer ingestion..."
-msgstr ""
-
 msgid "SECURITY NOT YET SYNCHRONIZED"
 msgstr ""
 
@@ -596,9 +599,6 @@ msgstr "සිතියම බලන්න"
 msgid "Batch Edit"
 msgstr ""
 
-msgid "batch edit"
-msgstr ""
-
 msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
@@ -608,11 +608,6 @@ msgstr "යොමු කරන්න"
 #, fuzzy
 #| msgid "Set permissions"
 msgid "Set Permissions"
-msgstr "කට්ටලයක් අවසර"
-
-#, fuzzy
-#| msgid "Set permissions"
-msgid "set permissions"
 msgstr "කට්ටලයක් අවසර"
 
 msgid "Discover the available datasets."
@@ -728,34 +723,6 @@ msgstr "විස්තරය"
 msgid "GeoNode Client Library"
 msgstr "GeoNode සහය"
 
-msgid "Explore Maps"
-msgstr "සිතියම් සොයන්න"
-
-msgid "Edit Map"
-msgstr "සිතියම සංස්කරණය කරන්න"
-
-msgid "Update"
-msgstr "යාවත්කාලීන කිරිම"
-
-msgid "Create a New Map"
-msgstr "නව සිතියමක් නිර්මාණය කරන්න"
-
-#, fuzzy
-#| msgid "Available styles"
-msgid "Available layers"
-msgstr "දැනට පවතින ශෛලියන්"
-
-msgid "Save"
-msgstr "සුරකින්න"
-
-#, fuzzy
-#| msgid "Remove Map"
-msgid "Save Map"
-msgstr "සිතියම ඉවත් කරන්න"
-
-msgid "Close"
-msgstr "වසන්න"
-
 msgid ""
 "Flora and/or fauna in natural environment. Examples: wildlife, vegetation, "
 "biological sciences, ecology, wilderness, sealife, wetlands, habitat."
@@ -776,7 +743,7 @@ msgid ""
 "climate, atmospheric conditions, climate change, precipitation."
 msgstr ""
 
-msgid "Climate"
+msgid "Climatology Meteorology Atmosphere"
 msgstr ""
 
 msgid ""
@@ -792,6 +759,9 @@ msgstr ""
 msgid ""
 "Height above or below sea level. Examples: altitude, bathymetry, digital "
 "elevation models, slope, derived products."
+msgstr ""
+
+msgid "Elevation"
 msgstr ""
 
 msgid ""
@@ -822,8 +792,10 @@ msgid ""
 "erosion."
 msgstr ""
 
-msgid "Geoscience"
-msgstr ""
+#, fuzzy
+#| msgid "Supplemental Information"
+msgid "Geoscientific Information"
+msgstr "අමතර විස්තර"
 
 msgid ""
 "Health, health services, human ecology, and safety. Examples: disease and "
@@ -839,10 +811,13 @@ msgid ""
 "images, annotations."
 msgstr ""
 
+msgid "Imagery Base Maps Earth Cover"
+msgstr ""
+
 msgid ""
-"Base MapsInland water features, drainage systems and their characteristics. "
-"Examples: rivers and glaciers, salt lakes, water utilization plans, dams, "
-"currents, floods, water quality, hydrographic charts."
+"Inland water features, drainage systems and their characteristics. Examples: "
+"rivers and glaciers, salt lakes, water utilization plans, dams, currents, "
+"floods, water quality, hydrographic charts."
 msgstr ""
 
 msgid "Inland Waters"
@@ -853,13 +828,16 @@ msgid ""
 "grounds, military transportation, information collection."
 msgstr ""
 
-msgid "Intelligence"
+msgid "Intelligence Military"
 msgstr ""
 
 msgid ""
 "Positional information and services. Examples: addresses, geodetic networks, "
 "control points, postal zones and services, place names."
 msgstr ""
+
+msgid "Location"
+msgstr "ස්ථානය"
 
 msgid ""
 "Features and characteristics of salt water bodies (excluding inland waters). "
@@ -874,7 +852,7 @@ msgid ""
 "Examples: land use maps, zoning maps, cadastral surveys, land ownership."
 msgstr ""
 
-msgid "Planning"
+msgid "Planning Cadastre"
 msgstr ""
 
 msgid ""
@@ -926,10 +904,8 @@ msgid ""
 "telecommunication, radio, communication networks."
 msgstr ""
 
-#, fuzzy
-#| msgid "User Activities"
-msgid "Utilities"
-msgstr "පරිශීලක ක්රියාකාරකම්"
+msgid "Utilities Communication"
+msgstr ""
 
 #, fuzzy
 #| msgid "Document Updated"
@@ -1040,11 +1016,6 @@ msgstr "එය බාහිර නම් ලේඛනයේ මෙම URL එක
 msgid "URL"
 msgstr "URL"
 
-#, fuzzy
-#| msgid "Documents"
-msgid "documents"
-msgstr "ලේඛන"
-
 msgid "Your browser does not support the audio element."
 msgstr ""
 
@@ -1087,9 +1058,6 @@ msgstr "ලේඛනය සංස්කරණය කරන්න"
 msgid "Request change"
 msgstr "ඉල්ලීම් බාගත"
 
-msgid "Metadata"
-msgstr "පාරදත්ත"
-
 msgid "Wizard"
 msgstr ""
 
@@ -1108,6 +1076,9 @@ msgstr "ආදේශ කරන්න"
 
 msgid "Remove"
 msgstr "ඉවත් කරන්න"
+
+msgid "Close"
+msgstr "වසන්න"
 
 msgid "Download Metadata"
 msgstr "මෙටාදත්ත බාගත කරන්න"
@@ -1156,11 +1127,6 @@ msgstr "ලේඛන සොයන්න"
 msgid "Upload Documents"
 msgstr "ලේඛන උඩුගත කරන්න"
 
-#, fuzzy
-#| msgid "dataset"
-msgid "data"
-msgstr "දත්ත කට්ටලය"
-
 #, python-format
 msgid "for %(document_title)s"
 msgstr ""
@@ -1186,6 +1152,9 @@ msgstr "මෙටාදත්ත සැපයුම්කරු"
 msgid "<< Back"
 msgstr ""
 
+msgid "Update"
+msgstr "යාවත්කාලීන කිරිම"
+
 #, fuzzy
 #| msgid "Next"
 msgid "Next >>"
@@ -1201,6 +1170,9 @@ msgstr "මෙටා දත්ත සංස්කරණය කරන්න"
 
 msgid "Editing details for"
 msgstr "සඳහා සංස්කරණය විස්තර"
+
+msgid "Return to Document"
+msgstr "ලේඛන වෙත ආපසු යන්න"
 
 msgid "Deleting"
 msgstr "මකාදැමීම"
@@ -1317,17 +1289,12 @@ msgid "Responsible and Permissions"
 msgstr "මෙම සිතියම සඳහා අවසරය වෙනස් කරන්න"
 
 #, fuzzy
-#| msgid "Message Inbox"
-msgid "Message box"
-msgstr "පණිවුඩය එන ලිපි"
-
-msgid "OK"
-msgstr ""
-
-#, fuzzy
 #| msgid "Published"
 msgid "Publishing"
 msgstr "ප්රකාශයට පත්"
+
+msgid "You are not allowed to view this document."
+msgstr "මෙම ලේඛනය නැරඹීමට ඔබට අවසර නැත."
 
 msgid "You are not permitted to delete this document"
 msgstr "මෙම ලේඛනය මකා දැමීමට ඔබට අවසර නැත"
@@ -1353,9 +1320,6 @@ msgstr "සපයනු නොලැබේ"
 #| msgid "Page Not Found"
 msgid "Not found"
 msgstr "පිටුව සොයා ගත නොහැක"
-
-msgid "You are not allowed to view this document."
-msgstr "මෙම ලේඛනය නැරඹීමට ඔබට අවසර නැත."
 
 msgid "You must set a point of contact for this resource"
 msgstr "ඔබ මෙම සම්පත් සඳහා සබඳතා ලක්ෂ්යයක් තැබිය යුතු"
@@ -1523,11 +1487,6 @@ msgid "%(GEONODE_APPS_NAME)s"
 msgstr ""
 
 #, fuzzy
-#| msgid "GeoExplorer"
-msgid "apps explore"
-msgstr "GeoExplorer"
-
-#, fuzzy
 #| msgid "Create a New Map"
 msgid "Create New"
 msgstr "නව සිතියමක් නිර්මාණය කරන්න"
@@ -1685,6 +1644,11 @@ msgstr "ගුණාංග"
 msgid "Create"
 msgstr "නිර්මාණය කරන්න"
 
+#, fuzzy
+#| msgid "Not provided"
+msgid "No title provided"
+msgstr "සපයනු නොලැබේ"
+
 msgid "No abstract provided"
 msgstr "වියුක්ත ලබා නැත"
 
@@ -1840,11 +1804,6 @@ msgid "Explore Group Categories"
 msgstr "කණ්ඩායම් ගවේෂණය"
 
 #, fuzzy
-#| msgid "Categories"
-msgid "groups explore"
-msgstr "වර්ග"
-
-#, fuzzy
 #| msgid "Create a New Group"
 msgid "Create a New Group Category"
 msgstr "නව සමූහ නිර්මාණය"
@@ -1863,16 +1822,6 @@ msgstr "සමූහ ඉවත් කරන්න"
 
 msgid "Create Group"
 msgstr "සමූහ නිර්මාණය"
-
-#, fuzzy
-#| msgid "A Map was created"
-msgid "groups create"
-msgstr "සිතියමක් නිර්මාණය කරන ලදී"
-
-#, fuzzy
-#| msgid "group"
-msgid "groups"
-msgstr "කණ්ඩායම"
 
 #, fuzzy
 #| msgid "last modified"
@@ -1951,9 +1900,6 @@ msgstr "සාමාජිකයන් එකතු කරන්න"
 msgid "Add Group Members"
 msgstr "කණ්ඩායම් සාමාජික කළමනාකරණය"
 
-msgid "groups remove"
-msgstr ""
-
 #, python-format
 msgid ""
 "\n"
@@ -1970,11 +1916,6 @@ msgstr "සමූහ සිතියම් / දත්ත ඉවත් කරන
 
 msgid "Remove selected maps/data"
 msgstr "තෝරාගත් සිතියම් / දත්ත ඉවත් කරන්න"
-
-#, fuzzy
-#| msgid "A Map was updated"
-msgid "groups update"
-msgstr "සිතියමක් යාවත්කාලීන කර"
 
 #, fuzzy
 #| msgid "Edit Group Details"
@@ -1999,16 +1940,19 @@ msgstr "පිරිසක් බිහි"
 msgid "Edit Group Category"
 msgstr "සමූහ නිර්මාණය"
 
-#, python-format
-msgid "The e-mail address '%(email)s' has already been invited."
+msgid "Save"
+msgstr "සුරකින්න"
+
+#, python-brace-format
+msgid "The e-mail address '{email}' has already been invited."
 msgstr ""
 
-#, python-format
-msgid "The e-mail address '%(email)s' has already accepted an invite."
+#, python-brace-format
+msgid "The e-mail address '{email}' has already accepted an invite."
 msgstr ""
 
-#, python-format
-msgid "An active user is already using the e-mail address '%(email)s'"
+#, python-brace-format
+msgid "An active user is already using the e-mail address '{email}'"
 msgstr ""
 
 #, fuzzy
@@ -2272,6 +2216,22 @@ msgstr "අවසාන වරට වෙනස්කම් සිදු කල�
 msgid "date when attribute statistics were last updated"
 msgstr "ගුණාංගයේ සංඛ්‍යාලේඛන අවසන් වරට යාවත්කලීන කල දිනය"
 
+#, fuzzy
+#| msgid "Return to Layer"
+msgid "Append to Layer"
+msgstr "ස්ථරය වෙත ආපසු යන්න"
+
+msgid "Return to Layer"
+msgstr "ස්ථරය වෙත ආපසු යන්න"
+
+#, fuzzy
+#| msgid "Edit Service Metadata"
+msgid "Preserve Metadata XML"
+msgstr "සංස්කරණය කරන්න සේවා පාරදත්ත"
+
+msgid "Select the charset or leave default"
+msgstr "අක්ෂර කට්ටලය තෝරන්න එසේත් නැතනම් .."
+
 msgid "Home"
 msgstr "මුල් පිටුව"
 
@@ -2280,11 +2240,6 @@ msgstr "ලිපිනය වෙනස් කිරීම"
 
 msgid "Assign a new point of contact to the layers below:"
 msgstr "පහත ස්ථර සබඳතා නව ස්ථානය ලබා සදනන :"
-
-#, fuzzy
-#| msgid "Layers"
-msgid "layers"
-msgstr "ස්ථර"
 
 msgid "Layer WMS GetCapabilities document"
 msgstr ""
@@ -2302,9 +2257,6 @@ msgid "Bounding Box"
 msgstr ""
 
 msgid "Time"
-msgstr ""
-
-msgid "Elevation"
 msgstr ""
 
 msgid "Actions"
@@ -2440,6 +2392,9 @@ msgid_plural "Layers"
 msgstr[0] "ස්ථරය"
 msgstr[1] "ලේයර්"
 
+msgid "Append Data"
+msgstr ""
+
 msgid "Edit data"
 msgstr "සංස්කරණය කරන්න දත්ත"
 
@@ -2569,11 +2524,6 @@ msgstr "මෙම ක්‍රියාව පහත සිතියම් ව�
 msgid "No maps are using this layer"
 msgstr "කිසිම සිතියමක් මෙම ස්ථරය භාවිතා නොකරයි"
 
-#, fuzzy
-#| msgid "A layer was uploaded"
-msgid "layers explore"
-msgstr "එක් ස්ථරයක් උඩුගත කලා."
-
 msgid "Upload Layers"
 msgstr "ස්ථරයන් උඩුගත කරන්න"
 
@@ -2603,9 +2553,6 @@ msgstr ""
 "උප ඒකකයකි සහය\n"
 "ඔබේ මුල් පාරදත්ත සමහර අහිමි වන්නට ඇත."
 
-msgid "Return to Layer"
-msgstr "ස්ථරය වෙත ආපසු යන්න"
-
 #, python-format
 msgid ""
 "\n"
@@ -2631,39 +2578,19 @@ msgstr "දිස්වන පිළිවල"
 msgid "Visible"
 msgstr "දිස්වේද?"
 
+msgid "ERROR"
+msgstr ""
+
+msgid "Following items are required:"
+msgstr ""
+
 #, fuzzy
 #| msgid "Upload Layer"
 msgid "Upload Layer Metadata"
 msgstr "ස්ථරය උඩුගත කරන්න"
 
-#, fuzzy
-#| msgid "A layer was uploaded"
-msgid "layers upload"
-msgstr "එක් ස්ථරයක් උඩුගත කලා."
-
 msgid "(XML - ISO, FGDC, ebRIM, Dublin Core)"
 msgstr ""
-
-msgid "Incomplete Uploads"
-msgstr "අසම්පූර්ණ උඩුගත කිරීම්"
-
-msgid "You have the following incomplete uploads"
-msgstr "පහත අසම්පූර්ණ උඩුගත කිරීම් ඔබට තිබේ"
-
-msgid "last updated on"
-msgstr "අවසන් වරට යාවත්කාලීන කරන ලද්දේ"
-
-msgid "Resume"
-msgstr "නැවත ආරම්භ කරන්න"
-
-msgid "Delete"
-msgstr "මකා දමන්න"
-
-msgid "Are you sure you want to delete this upload?"
-msgstr "මෙම උඩුගත කිරීම මකා දැමිය යුතු යයි ඔබට විශ්වාසද?"
-
-msgid "Delete, and don't ask me again."
-msgstr "මකා දමන්න, නැවත මෙය මගෙන් නොවිමසන්න"
 
 msgid "Remove Layers"
 msgstr "ලේයර් ඉවත් කරන්න"
@@ -2681,14 +2608,6 @@ msgstr ""
 
 msgid "Replace Layer"
 msgstr " ස්ථරය ප්‍රතිස්ථාපනය කරන්න"
-
-#, fuzzy
-#| msgid "Edit Service Metadata"
-msgid "Preserve Metadata XML"
-msgstr "සංස්කරණය කරන්න සේවා පාරදත්ත"
-
-msgid "Select the charset or leave default"
-msgstr "අක්ෂර කට්ටලය තෝරන්න එසේත් නැතනම් .."
 
 msgid "Manage Styles"
 msgstr "ශෛලීයන් කළමනාකරණය කරන්න"
@@ -2738,12 +2657,64 @@ msgid "Preview"
 msgstr "පූර්වදර්ශනය"
 
 #, fuzzy
+#| msgid "Edit Service Metadata"
+msgid "Required Metadata"
+msgstr "සංස්කරණය කරන්න සේවා පාරදත්ත"
+
+#, fuzzy
 #| msgid "Attributes"
 msgid "Dataset Attributes"
 msgstr "ගුණාංග"
 
 msgid "Upload Layer"
 msgstr "ස්ථරය උඩුගත කරන්න"
+
+#, fuzzy
+#| msgid "Download Metadata"
+msgid "Upload status"
+msgstr "මෙටාදත්ත බාගත කරන්න"
+
+msgid ""
+"This file needs additional configuration to complete the upload process. "
+"Please click on the button to fill the required configuration"
+msgstr ""
+
+msgid "Delete"
+msgstr "මකා දමන්න"
+
+#, fuzzy
+#| msgid "Upload Document"
+msgid "Upload process completed"
+msgstr "ලේඛනය උඩුගත කරන්න"
+
+msgid ""
+"The upload process cannot be completed because the original file is no more "
+"available"
+msgstr ""
+
+#, fuzzy
+#| msgid "Create"
+msgid "Created"
+msgstr "නිර්මාණය කරන්න"
+
+msgid "Progress"
+msgstr ""
+
+msgid "page"
+msgstr "පිටුව"
+
+msgid "of"
+msgstr "පිළිබඳ"
+
+#, fuzzy
+#| msgid "Incomplete Uploads"
+msgid "Delete incomplete upload"
+msgstr "අසම්පූර්ණ උඩුගත කිරීම්"
+
+#, fuzzy
+#| msgid "Are you sure you want to delete this upload?"
+msgid "Are you sure you want to remove this incomplete upload?"
+msgstr "මෙම උඩුගත කිරීම මකා දැමිය යුතු යයි ඔබට විශ්වාසද?"
 
 #, fuzzy
 #| msgid "Upload Layer Step 2"
@@ -3238,31 +3209,50 @@ msgstr "දැන්"
 msgid "You are attempting to replace a vector layer with an unknown format."
 msgstr "ඔබ වෙනුවට උත්සාහ කරන්නේ a vector layer with a raster."
 
-msgid "You are attempting to replace a vector layer with a raster."
+msgid ""
+"The UUID identifier from the XML Metadata is already in use in this system."
+msgstr ""
+
+#, fuzzy, python-brace-format
+#| msgid "You are attempting to replace a vector layer with a raster."
+msgid "You are attempting to {action_type} a vector layer with a raster."
 msgstr "ඔබ වෙනුවට උත්සාහ කරන්නේ a vector layer with a raster."
 
-msgid "You are attempting to replace a raster layer with a vector."
+#, fuzzy, python-brace-format
+#| msgid "You are attempting to replace a raster layer with a vector."
+msgid "You are attempting to {action_type} a raster layer with a vector."
 msgstr "ඔබ වෙනුවට උත්සාහ කරන්නේ a raster layer with a vector."
 
+#, fuzzy, python-brace-format
+#| msgid "You are attempting to replace a vector layer with a raster."
 msgid ""
-"Please ensure the name is consistent with the file you are trying to replace."
+"You are attempting to {action_type} a vector layer with an unknown format."
+msgstr "ඔබ වෙනුවට උත්සාහ කරන්නේ a vector layer with a raster."
+
+#, python-brace-format
+msgid ""
+"Please ensure the name is consistent with the file you are trying to "
+"{action_type}."
 msgstr ""
 
 msgid "Local GeoNode layer has no geometry type."
 msgstr ""
 
+#, python-brace-format
 msgid ""
 "Please ensure there is at least one geometry "
-"type                                 that is consistent with the file you "
-"are trying to replace."
+"type                             that is consistent with the file you are "
+"trying to {action_type}."
 msgstr ""
 
-#, python-format
-msgid "Some error occurred while trying to access the uploaded schema: %s"
+msgid "The selected Layer does not exists in the catalog."
+msgstr ""
+
+msgid "Please ensure that the layer structure is consistent "
 msgstr ""
 
 msgid ""
-"The UUID identifier from the XML Metadata is already in use in this system."
+"Some error occurred while trying to access the uploaded schema: {str(e)}"
 msgstr ""
 
 msgid ""
@@ -3299,10 +3289,11 @@ msgstr "මෙම ස්ථරය බැලීමට ඔබට අවසර න�
 msgid "Failed to upload the layer"
 msgstr "උඩුගත කිරීමට ඇති ගොනු"
 
-#, fuzzy
-#| msgid "Unable to delete layer"
-msgid "Unable to delete layer"
-msgstr "ස්ථරය ඉවත් කිරීමට නොහැකි විය"
+msgid "You are attempting to replace a vector layer with a raster."
+msgstr "ඔබ වෙනුවට උත්සාහ කරන්නේ a vector layer with a raster."
+
+msgid "You are attempting to replace a raster layer with a vector."
+msgstr "ඔබ වෙනුවට උත්සාහ කරන්නේ a raster layer with a vector."
 
 msgid ""
 "This layer is a member of a layer group, you must remove the layer from the "
@@ -3310,8 +3301,10 @@ msgid ""
 msgstr ""
 "මෙම ස්ථරය තට්ටුවක් කණ්ඩායමේ සාමාජිකයකු වන , ඔබ මකාදැමීමට පෙර කණ්ඩායමේ ස්තරය ඉවත් කළ යුතුයි."
 
-msgid "couldn't generate thumbnail"
-msgstr ""
+#, fuzzy, python-format
+#| msgid "Remote Thumbnail"
+msgid "couldn't generate thumbnail: %s"
+msgstr "Remote Thumbnail"
 
 msgid "Map Created"
 msgstr "සිතියම නිර්මාණය කරන ලදී."
@@ -3413,9 +3406,6 @@ msgstr "ස්ථර පරාමිති"
 msgid "source params"
 msgstr "ප්‍රභව පරාමිති"
 
-msgid "maps"
-msgstr ""
-
 msgid "Map layers WMS GetCapabilities document"
 msgstr ""
 
@@ -3450,6 +3440,9 @@ msgstr "මෙම සිතියම පිටපත් කරන්න"
 
 msgid "Duplicate this map and modify it for your own purposes"
 msgstr "මෙම සිතියමේ අනුපිටපතක් ගෙන එය ඔබේ අරමුණු අනුව වෙනස් කරන්න"
+
+msgid "Create a New Map"
+msgstr "නව සිතියමක් නිර්මාණය කරන්න"
 
 msgid ""
 "\n"
@@ -3507,10 +3500,11 @@ msgstr "භාගත වීම සම්පූර්ණයි"
 msgid "Download Failed"
 msgstr "භාගත වීම අසාර්ථකයි"
 
-#, fuzzy
-#| msgid "GeoExplorer"
-msgid "maps explore"
-msgstr "GeoExplorer"
+msgid "Edit Map"
+msgstr "සිතියම සංස්කරණය කරන්න"
+
+msgid "Explore Maps"
+msgstr "සිතියම් සොයන්න"
 
 msgid ""
 "Note: this map's orginal metadata was populated by importing a metadata XML "
@@ -3524,6 +3518,11 @@ msgstr ""
 "GeoNode පාර-දත්ත ආනයනය තිබෙන ISO, FGDC , සහ ඩබ්ලින් මූලික පාරදත්ත elements.\n"
 " උප ඒකකයකි සහය\n"
 "ඔබේ මුල් පාරදත්ත සමහර අහිමි වන්නට ඇත."
+
+#, fuzzy
+#| msgid "Return to"
+msgid "Return to Map"
+msgstr "වෙත ආපසු"
 
 msgid "Remove Map"
 msgstr "සිතියම ඉවත් කරන්න"
@@ -3556,11 +3555,6 @@ msgstr "මෙම සිතියම බැලීමට ඔබට අවසර �
 
 #, fuzzy
 #| msgid "Thumbnail"
-msgid "Thumbnail saved"
-msgstr "Thumbnail"
-
-#, fuzzy
-#| msgid "Thumbnail"
 msgid "error saving thumbnail"
 msgstr "Thumbnail"
 
@@ -3578,7 +3572,7 @@ msgstr ""
 msgid "Alert situation reported by monitoring"
 msgstr ""
 
-msgid "GeoNode Monitoring on {} reports errors: {}"
+msgid "GeoNode Monitoring on {base_ctx['host']} "
 msgstr ""
 
 #, fuzzy
@@ -3653,7 +3647,8 @@ msgstr "උපුටාගත් මූලාශ්‍රය පරිශීල�
 msgid "Show data for specific label"
 msgstr "උපුටාගත් මූලාශ්‍රය පරිශීලනය කල දිනය"
 
-msgid "Write result to file, default GEOIP_PATH: {}"
+#, python-brace-format
+msgid "Write result to file, default GEOIP_PATH: {settings.GEOIP_PATH}"
 msgstr ""
 
 msgid ""
@@ -3822,7 +3817,8 @@ msgstr ""
 msgid "Is it active"
 msgstr ""
 
-msgid "{}: {}"
+#, python-brace-format
+msgid "{self.severity}: {self.name}"
 msgstr ""
 
 msgid "Value must be above"
@@ -4050,11 +4046,6 @@ msgstr "පැතිකඩක් නිර්මාණය කරන්න"
 msgid "Profile of "
 msgstr "ගේ පැතිකඩ"
 
-#, fuzzy
-#| msgid "GeoExplorer"
-msgid "people explore"
-msgstr "GeoExplorer"
-
 msgid "Not provided."
 msgstr "සපයා නැත."
 
@@ -4063,9 +4054,6 @@ msgstr "තත්ත්වය ."
 
 msgid "Organization"
 msgstr "සංවිධානය"
-
-msgid "Location"
-msgstr "ස්ථානය"
 
 msgid "Not provided"
 msgstr "සපයනු නොලැබේ"
@@ -4129,11 +4117,6 @@ msgstr "පරිශීලක ක්රියාකාරකම්"
 msgid "Resources"
 msgstr "සම්පත්"
 
-#, fuzzy
-#| msgid "Invite people"
-msgid "edit people"
-msgstr "ජනතාවට ආරාධනා කරනවා"
-
 msgid "Edit Your Profile"
 msgstr "ඔබේ පැතිකඩ සංස්කරණය කරන්න"
 
@@ -4149,7 +4132,9 @@ msgstr "පැතිකඩ යාවත්කාලීන කරන්න"
 msgid "Explore People"
 msgstr "මිනිසුන් සොයන්න"
 
-msgid "Your username for "
+#, fuzzy, python-brace-format
+#| msgid "Your username for "
+msgid "Your username for {site.name}"
 msgstr "ඔබගේ පරිශීලක නාමය සඳහා"
 
 msgid "Your username has been emailed to you."
@@ -4469,9 +4454,9 @@ msgstr "ඒ සම්පත් ගේ බාගත ඉල්ලා තිබෙ�
 msgid "Resource is already being processed"
 msgstr "ඒ සම්පත් ගේ බාගත ඉල්ලා තිබෙනවා"
 
-#, fuzzy
+#, fuzzy, python-brace-format
 #| msgid "A resource's download has been requested"
-msgid "Resource {} is being processed"
+msgid "Resource {resource_id} is being processed"
 msgstr "ඒ සම්පත් ගේ බාගත ඉල්ලා තිබෙනවා"
 
 #, fuzzy
@@ -4487,9 +4472,9 @@ msgstr "ඔබ මෙම සේවාව ඉවත් කිරීමට අව�
 msgid "You are not permitted to remove this service."
 msgstr "ඔබ මෙම සේවාව ඉවත් කිරීමට අවසර නැත."
 
-#, fuzzy
+#, fuzzy, python-brace-format
 #| msgid "Service has been created:"
-msgid "Service {} has been deleted"
+msgid "Service {service.name} has been deleted"
 msgstr "සේවා නිර්මාණය කර ඇත :"
 
 msgid "created"
@@ -4757,6 +4742,14 @@ msgstr ""
 #| msgid "Delete from Favorites"
 msgid "Delete Geo Limits"
 msgstr "ප්‍රියතමදෑ මැකීම "
+
+#, fuzzy
+#| msgid "Message Inbox"
+msgid "Message box"
+msgstr "පණිවුඩය එන ලිපි"
+
+msgid "OK"
+msgstr ""
 
 msgid "Mandatory files : SHP , DBF"
 msgstr ""
@@ -5775,22 +5768,11 @@ msgstr "පහත දැක්වෙන කණ්ඩායම් :"
 msgid "Updating Metadata..."
 msgstr "මෙටාදත්ත බාගත කරන්න"
 
-msgid "ERROR"
-msgstr ""
-
 msgid "Topic Category is mandatory and cannot be empty!"
 msgstr ""
 
 msgid "Group is mandatory and cannot be empty!"
 msgstr ""
-
-msgid "Return to Document"
-msgstr "ලේඛන වෙත ආපසු යන්න"
-
-#, fuzzy
-#| msgid "Return to"
-msgid "Return to Map"
-msgstr "වෙත ආපසු"
 
 msgid "Identification"
 msgstr "හදුනා ගැනීම"
@@ -5853,6 +5835,9 @@ msgid "Online Link"
 msgstr ""
 
 msgid "* Field declared Mandatory by the Metadata Schema"
+msgstr ""
+
+msgid "Please, fill the following items before clicking on preview:"
 msgstr ""
 
 #, fuzzy
@@ -6194,12 +6179,6 @@ msgstr "yyyy-mm-dd"
 msgid "Date ends before:"
 msgstr "දිනට පෙර අවසන් :"
 
-msgid "page"
-msgstr "පිටුව"
-
-msgid "of"
-msgstr "පිළිබඳ"
-
 #, fuzzy
 #| msgid "Search"
 msgid "Search by region"
@@ -6257,9 +6236,6 @@ msgstr "Z - A"
 
 msgid "Most popular"
 msgstr "වඩාත්ම ප්‍රසිද්ධ"
-
-msgid "Thesaurus"
-msgstr ""
 
 msgid "Text"
 msgstr "පෙළ"
@@ -6409,6 +6385,11 @@ msgid "Choose between using jumbotron background and slide show"
 msgstr ""
 
 #, fuzzy
+#| msgid "All contents"
+msgid "Empty content"
+msgstr "සියළුම අන්තර්ගතයන්"
+
+#, fuzzy
 #| msgid "Could not find any layers in a compatible projection."
 msgid "Could not access to uploaded data."
 msgstr "  compatible projection. තුල ඕනෑම ස්ථර මම සොයා ගැනීමට නොහැක "
@@ -6429,6 +6410,22 @@ msgid "Layer already exists"
 msgstr "තට්ටුවක් නිර්මානය"
 
 msgid "Name already in use and overwrite is False"
+msgstr ""
+
+msgid "Error configuring time:"
+msgstr ""
+
+msgid "The GeoServer Import Session is no more available"
+msgstr ""
+
+#, python-brace-format
+msgid "Expected to find layer named '{name}' in geoserver"
+msgstr ""
+
+msgid "Exception occurred while parsing the provided Metadata file."
+msgstr ""
+
+msgid "Error configuring Layer"
 msgstr ""
 
 msgid "Invalid zip file detected"
@@ -6477,20 +6474,19 @@ msgid ""
 "To support the time step, you must enable the OGC_SERVER DATASTORE option"
 msgstr ""
 
-#, python-format
-msgid "Unsupported file type: %s"
+#, python-brace-format
+msgid "Unsupported file type: {e.message}"
 msgstr ""
 
-#, python-format
-msgid "File does not exist: %s"
+#, python-brace-format
+msgid "File does not exist: {absolute_base_file}"
 msgstr ""
 
-#, python-format
-msgid "unknown item state: %s"
+#, python-brace-format
+msgid "unknown item state: {task.state}"
 msgstr ""
 
-#, python-format
-msgid "error during import: %s"
+msgid "error during import: {progress.get('message')}"
 msgstr ""
 
 #, fuzzy
@@ -6509,3 +6505,118 @@ msgstr "වලංගු නොවන අවසර මට්ටම"
 
 msgid "Permission Denied"
 msgstr "අවසර ලබා දෙනු නොලැබේ"
+
+#, fuzzy
+#~| msgid "Set permissions"
+#~ msgid "set permissions"
+#~ msgstr "කට්ටලයක් අවසර"
+
+#, fuzzy
+#~| msgid "Documents"
+#~ msgid "documents"
+#~ msgstr "ලේඛන"
+
+#, fuzzy
+#~| msgid "dataset"
+#~ msgid "data"
+#~ msgstr "දත්ත කට්ටලය"
+
+#, fuzzy
+#~| msgid "GeoExplorer"
+#~ msgid "apps explore"
+#~ msgstr "GeoExplorer"
+
+#, fuzzy
+#~| msgid "Categories"
+#~ msgid "groups explore"
+#~ msgstr "වර්ග"
+
+#, fuzzy
+#~| msgid "A Map was created"
+#~ msgid "groups create"
+#~ msgstr "සිතියමක් නිර්මාණය කරන ලදී"
+
+#, fuzzy
+#~| msgid "group"
+#~ msgid "groups"
+#~ msgstr "කණ්ඩායම"
+
+#, fuzzy
+#~| msgid "A Map was updated"
+#~ msgid "groups update"
+#~ msgstr "සිතියමක් යාවත්කාලීන කර"
+
+#, fuzzy
+#~| msgid "A layer was uploaded"
+#~ msgid "layers append"
+#~ msgstr "එක් ස්ථරයක් උඩුගත කලා."
+
+#, fuzzy
+#~| msgid "Layers"
+#~ msgid "layers"
+#~ msgstr "ස්ථර"
+
+#, fuzzy
+#~| msgid "A layer was uploaded"
+#~ msgid "layers explore"
+#~ msgstr "එක් ස්ථරයක් උඩුගත කලා."
+
+#, fuzzy
+#~| msgid "A layer was uploaded"
+#~ msgid "layers upload"
+#~ msgstr "එක් ස්ථරයක් උඩුගත කලා."
+
+#~ msgid "Incomplete Uploads"
+#~ msgstr "අසම්පූර්ණ උඩුගත කිරීම්"
+
+#~ msgid "You have the following incomplete uploads"
+#~ msgstr "පහත අසම්පූර්ණ උඩුගත කිරීම් ඔබට තිබේ"
+
+#~ msgid "Resume"
+#~ msgstr "නැවත ආරම්භ කරන්න"
+
+#, fuzzy
+#~| msgid "GeoExplorer"
+#~ msgid "maps explore"
+#~ msgstr "GeoExplorer"
+
+#, fuzzy
+#~| msgid "GeoExplorer"
+#~ msgid "people explore"
+#~ msgstr "GeoExplorer"
+
+#, fuzzy
+#~| msgid "Invite people"
+#~ msgid "edit people"
+#~ msgstr "ජනතාවට ආරාධනා කරනවා"
+
+#~ msgid "last updated on"
+#~ msgstr "අවසන් වරට යාවත්කාලීන කරන ලද්දේ"
+
+#~ msgid "Delete, and don't ask me again."
+#~ msgstr "මකා දමන්න, නැවත මෙය මගෙන් නොවිමසන්න"
+
+#, fuzzy
+#~| msgid "Available styles"
+#~ msgid "Available layers"
+#~ msgstr "දැනට පවතින ශෛලියන්"
+
+#, fuzzy
+#~| msgid "Remove Map"
+#~ msgid "Save Map"
+#~ msgstr "සිතියම ඉවත් කරන්න"
+
+#, fuzzy
+#~| msgid "User Activities"
+#~ msgid "Utilities"
+#~ msgstr "පරිශීලක ක්රියාකාරකම්"
+
+#, fuzzy
+#~| msgid "Unable to delete layer"
+#~ msgid "Unable to delete layer"
+#~ msgstr "ස්ථරය ඉවත් කිරීමට නොහැකි විය"
+
+#, fuzzy
+#~| msgid "Thumbnail"
+#~ msgid "Thumbnail saved"
+#~ msgstr "Thumbnail"

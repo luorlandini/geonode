@@ -23,12 +23,8 @@ from django.core.management.base import BaseCommand
 from geonode.layers.models import Layer
 from geonode import geoserver  # noqa
 from geonode.catalogue.models import catalogue_post_save
-from geonode.geoserver.helpers import ogc_server_settings
 import logging
-
-
-logger = logging.getLogger(__name__)
-
+from django.conf import settings
 
 from geonode.utils import (
     check_ogc_backend,
@@ -38,9 +34,12 @@ from geonode.base.utils import (
     delete_orphaned_thumbs,
     remove_duplicate_links
 )
+import ast
 
 if check_ogc_backend(geoserver.BACKEND_PACKAGE):
     from geonode.geoserver.helpers import set_attributes_from_geoserver as set_attributes
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -55,6 +54,7 @@ class Command(BaseCommand):
             default=False,
             help='Stop after any errors are encountered.'
         )
+
         parser.add_argument(
             '-d',
             '--remove-duplicates',
@@ -63,6 +63,7 @@ class Command(BaseCommand):
             default=False,
             help='Remove duplicates first.'
         )
+
         parser.add_argument(
             '-p',
             '--prune',
@@ -71,6 +72,7 @@ class Command(BaseCommand):
             default=False,
             help='Prune Old Links.'
         )
+
         parser.add_argument(
             '-t',
             '--delete-orphaned-thumbs',
@@ -79,12 +81,14 @@ class Command(BaseCommand):
             default=False,
             help='Delete Orphaned Thumbnails.'
         )
+
         parser.add_argument(
             '-f',
             '--filter',
             dest="filter",
             default=None,
             help="Only update data the layers that match the given filter"),
+
         parser.add_argument(
             '-u',
             '--username',
@@ -92,10 +96,38 @@ class Command(BaseCommand):
             default=None,
             help="Only update data owned by the specified username")
 
+        parser.add_argument(
+            '-uuid',
+            '--set-uuid',
+            dest='set_uuid',
+            default="False",
+            help='if set as True, will refresh the UUID based on the UUID_HANDLER if configured (Default False)'
+        )
+
+        parser.add_argument(
+            '-attr',
+            '--set-attr',
+            dest='set_attrib',
+            default="True",
+            help='If set will refresh the attributes of the resource taken from Geoserver. (Default True)'
+        )
+
+        parser.add_argument(
+            '-l',
+            '--set-links',
+            dest='set_links',
+            default="True",
+            help='If set will refresh the links of the resource. (Default True)'
+        )
+
     def handle(self, *args, **options):
         ignore_errors = options.get('ignore_errors')
         remove_duplicates = options.get('remove_duplicates')
         prune = options.get('prune')
+        set_uuid = ast.literal_eval(options.get('set_uuid', 'False'))
+        set_attrib = ast.literal_eval(options.get('set_attrib', 'True'))
+        set_links = ast.literal_eval(options.get('set_links', 'True'))
+
         delete_orphaned_thumbnails = options.get('delete_orphaned_thumbnails')
         filter = options.get('filter')
         if not options.get('username'):
@@ -110,13 +142,22 @@ class Command(BaseCommand):
             all_layers = all_layers.filter(owner__username=username)
 
         for index, layer in enumerate(all_layers):
-            print("[%s / %s] Updating Layer [%s] ..." % ((index + 1), len(all_layers), layer.name))
+            print(f"[{(index + 1)} / {len(all_layers)}] Updating Layer [{layer.name}] ...")
             try:
                 # recalculate the layer statistics
-                set_attributes(layer, overwrite=True)
+                if set_attrib:
+                    set_attributes(layer, overwrite=True)
 
+                if set_uuid and hasattr(settings, 'LAYER_UUID_HANDLER') and settings.LAYER_UUID_HANDLER != '':
+                    from geonode.layers.utils import get_uuid_handler
+                    uuid = get_uuid_handler()(layer).create_uuid()
+                    la = Layer.objects.filter(resourcebase_ptr=layer.resourcebase_ptr)
+                    la.update(uuid=uuid)
+                    layer.refresh_from_db()
                 # refresh metadata links
-                set_resource_default_links(layer, layer, prune=prune)
+
+                if set_links:
+                    set_resource_default_links(layer, layer, prune=prune)
 
                 # refresh catalogue metadata records
                 catalogue_post_save(instance=layer, sender=layer.__class__)
@@ -128,7 +169,7 @@ class Command(BaseCommand):
                 import traceback
                 traceback.print_exc()
                 if ignore_errors:
-                    logger.error("[ERROR] Layer [%s] couldn't be updated" % (layer.name))
+                    logger.error(f"[ERROR] Layer [{layer.name}] couldn't be updated")
                 else:
                     raise e
 

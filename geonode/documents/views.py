@@ -17,31 +17,28 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #########################################################################
-import os
 import json
 import logging
 import traceback
 from itertools import chain
 import warnings
 
-from guardian.shortcuts import get_perms, get_objects_for_user
+from guardian.shortcuts import get_objects_for_user
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.template import loader
 from django.utils.translation import ugettext as _
-from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-from django_downloadview.response import DownloadResponse
 from django.views.generic.edit import UpdateView, CreateView
 from django.db.models import F
 from django.forms.utils import ErrorList
 
 from geonode.base.utils import ManageResourceOwnerPermissions
 from geonode.decorators import check_keyword_write_perms
+from geonode.documents.utils import get_download_response
 from geonode.utils import resolve_object
 from geonode.security.views import _perms_info_json
 from geonode.people.forms import ProfileForm
@@ -122,9 +119,10 @@ def document_detail(request, docid):
     # Call this first in order to be sure "perms_list" is correct
     permissions_json = _perms_info_json(document)
 
-    perms_list = get_perms(
-        request.user,
-        document.get_self_resource()) + get_perms(request.user, document)
+    perms_list = list(
+        document.get_self_resource().get_user_perms(request.user)
+        .union(document.get_user_perms(request.user))
+    )
 
     group = None
     if document.group:
@@ -185,18 +183,13 @@ def document_detail(request, docid):
 
 
 def document_download(request, docid):
-    document = get_object_or_404(Document, pk=docid)
+    response = get_download_response(request, docid, attachment=True)
+    return response
 
-    if not request.user.has_perm(
-            'base.download_resourcebase',
-            obj=document.get_self_resource()):
-        return HttpResponse(
-            loader.render_to_string(
-                '401.html', context={
-                    'error_message': _("You are not allowed to view this document.")}, request=request), status=401)
-    register_event(request, EventType.EVENT_DOWNLOAD, document)
-    filename = slugify(os.path.splitext(os.path.basename(document.title))[0])
-    return DownloadResponse(document.doc_file, basename=f"{filename}.{document.extension}")
+
+def document_link(request, docid):
+    response = get_download_response(request, docid)
+    return response
 
 
 class DocumentUploadView(CreateView):
@@ -275,15 +268,6 @@ class DocumentUploadView(CreateView):
         if bbox:
             bbox = BBOXHelper.from_xy(bbox)
             self.object.bbox_polygon = bbox.as_polygon()
-
-        if getattr(settings, 'SLACK_ENABLED', False):
-            try:
-                from geonode.contrib.slack.utils import build_slack_message_document, send_slack_message
-                send_slack_message(
-                    build_slack_message_document(
-                        "document_new", self.object))
-            except Exception:
-                logger.error("Could not send slack message for new document.")
 
         self.object.save(notify=True)
         register_event(self.request, EventType.EVENT_UPLOAD, self.object)
@@ -373,7 +357,7 @@ def document_metadata(
             prefix="resource")
         category_form = CategoryForm(request.POST, prefix="category_choice_field", initial=int(
             request.POST["category_choice_field"]) if "category_choice_field" in request.POST and
-                                                        request.POST["category_choice_field"] else None)
+            request.POST["category_choice_field"] else None)
 
         if hasattr(settings, 'THESAURUS'):
             tkeywords_form = TKeywordForm(request.POST)
@@ -406,8 +390,7 @@ def document_metadata(
                             if len(tkl) > 0:
                                 tkl_ids = ",".join(
                                     map(str, tkl.values_list('id', flat=True)))
-                                tkeywords_list += "," + \
-                                tkl_ids if len(
+                                tkeywords_list += f",{tkl_ids}" if len(
                                     tkeywords_list) > 0 else tkl_ids
                     except Exception:
                         tb = traceback.format_exc()
@@ -569,6 +552,11 @@ def document_metadata(
         "metadata_author_groups": metadata_author_groups,
         "TOPICCATEGORY_MANDATORY": getattr(settings, 'TOPICCATEGORY_MANDATORY', False),
         "GROUP_MANDATORY_RESOURCES": getattr(settings, 'GROUP_MANDATORY_RESOURCES', False),
+        "UI_MANDATORY_FIELDS": list(
+            set(getattr(settings, 'UI_DEFAULT_MANDATORY_FIELDS', []))
+            |
+            set(getattr(settings, 'UI_REQUIRED_FIELDS', []))
+        )
     })
 
 

@@ -34,8 +34,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 
-from guardian.shortcuts import get_perms
-
 from geonode.groups.models import GroupProfile
 from geonode.base.auth import get_or_create_token
 from geonode.security.views import _perms_info_json
@@ -140,10 +138,10 @@ def geoapp_detail(request, geoappid, template='apps/app_detail.html'):
     # Call this first in order to be sure "perms_list" is correct
     permissions_json = _perms_info_json(geoapp_obj)
 
-    perms_list = get_perms(
-        request.user,
-        geoapp_obj.get_self_resource()) + get_perms(request.user, geoapp_obj)
-
+    perms_list = list(
+        geoapp_obj.get_self_resource().get_user_perms(request.user)
+        .union(geoapp_obj.get_user_perms(request.user))
+    )
     group = None
     if geoapp_obj.group:
         try:
@@ -209,9 +207,10 @@ def geoapp_edit(request, geoappid, template='apps/app_edit.html'):
     # Call this first in order to be sure "perms_list" is correct
     permissions_json = _perms_info_json(geoapp_obj)
 
-    perms_list = get_perms(
-        request.user,
-        geoapp_obj.get_self_resource()) + get_perms(request.user, geoapp_obj)
+    perms_list = list(
+        geoapp_obj.get_self_resource().get_user_perms(request.user)
+        .union(geoapp_obj.get_user_perms(request.user))
+    )
 
     group = None
     if geoapp_obj.group:
@@ -336,7 +335,7 @@ def geoapp_metadata(request, geoappid, template='apps/app_metadata.html', ajax=T
             prefix="resource")
         category_form = CategoryForm(request.POST, prefix="category_choice_field", initial=int(
             request.POST["category_choice_field"]) if "category_choice_field" in request.POST and
-                                                        request.POST["category_choice_field"] else None)
+            request.POST["category_choice_field"] else None)
         tkeywords_form = TKeywordForm(request.POST)
     else:
         geoapp_form = GeoAppForm(instance=geoapp_obj, prefix="resource")
@@ -361,8 +360,7 @@ def geoapp_metadata(request, geoappid, template='apps/app_metadata.html', ajax=T
                         if len(tkl) > 0:
                             tkl_ids = ",".join(
                                 map(str, tkl.values_list('id', flat=True)))
-                            tkeywords_list += "," + \
-                            tkl_ids if len(
+                            tkeywords_list += f",{tkl_ids}" if len(
                                 tkeywords_list) > 0 else tkl_ids
                 except Exception:
                     tb = traceback.format_exc()
@@ -517,6 +515,11 @@ def geoapp_metadata(request, geoappid, template='apps/app_metadata.html', ajax=T
         "metadata_author_groups": metadata_author_groups,
         "TOPICCATEGORY_MANDATORY": getattr(settings, 'TOPICCATEGORY_MANDATORY', False),
         "GROUP_MANDATORY_RESOURCES": getattr(settings, 'GROUP_MANDATORY_RESOURCES', False),
+        "UI_MANDATORY_FIELDS": list(
+            set(getattr(settings, 'UI_DEFAULT_MANDATORY_FIELDS', []))
+            |
+            set(getattr(settings, 'UI_REQUIRED_FIELDS', []))
+        )
     })
 
 
