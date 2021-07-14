@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #########################################################################
 #
 # Copyright (C) 2021 OSGeo
@@ -206,6 +205,7 @@ def create_thumbnail(
 
     # save thumbnail
     instance.save_thumbnail(default_thumbnail_name, image=content)
+    return instance.thumbnail_url
 
 
 def _generate_thumbnail_name(instance: Union[Layer, Map]) -> Optional[str]:
@@ -316,7 +316,7 @@ def _layers_locations(
                 logger.warning(f"Layer for MapLayer {name} was not found. Skipping it in the thumbnail.")
                 continue
 
-            if layer.storeType == "remoteStore":
+            if layer.subtype in ['tileStore', 'remote']:
                 # limit number of locations, ensuring layer order
                 if len(locations) and locations[-1][0] == layer.remote_service.service_url:
                     # if previous layer's location is the same as the current one - append current layer there
