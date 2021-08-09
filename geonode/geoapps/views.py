@@ -76,12 +76,8 @@ def _resolve_geoapp(request, id, permission='base.change_resourcebase',
     '''
     Resolve the GeoApp by the provided typename and check the optional permission.
     '''
-    if GeoApp.objects.filter(urlsuffix=id).count() > 0:
-        key = 'urlsuffix'
-    else:
-        key = 'pk'
 
-    return resolve_object(request, GeoApp, {key: id}, permission=permission,
+    return resolve_object(request, GeoApp, {"pk": id}, permission=permission,
                           permission_msg=msg, **kwargs)
 
 
@@ -160,7 +156,7 @@ def geoapp_detail(request, geoappid, template='apps/app_detail.html'):
 
     context_dict = {
         'appId': geoappid,
-        'appType': geoapp_obj.type,
+        'appType': geoapp_obj.resource_type,
         'config': _config,
         'user': request.user,
         'access_token': access_token,
@@ -220,18 +216,20 @@ def geoapp_edit(request, geoappid, template='apps/app_edit.html'):
         except GroupProfile.DoesNotExist:
             group = None
 
-    r = resource_manager.update(
-        geoapp_obj.uuid,
-        instance=geoapp_obj,
-        notify=True)
+    r = geoapp_obj
+    if request.method in ('POST', 'PATCH', 'PUT'):
+        r = resource_manager.update(
+            geoapp_obj.uuid,
+            instance=geoapp_obj,
+            notify=True)
 
-    resource_manager.set_permissions(
-        geoapp_obj.uuid,
-        instance=geoapp_obj,
-        permissions=ast.literal_eval(permissions_json)
-    )
+        resource_manager.set_permissions(
+            geoapp_obj.uuid,
+            instance=geoapp_obj,
+            permissions=ast.literal_eval(permissions_json)
+        )
 
-    resource_manager.set_thumbnail(geoapp_obj.uuid, instance=geoapp_obj, overwrite=False)
+        resource_manager.set_thumbnail(geoapp_obj.uuid, instance=geoapp_obj, overwrite=False)
 
     access_token = None
     if request and request.user:
@@ -244,7 +242,7 @@ def geoapp_edit(request, geoappid, template='apps/app_edit.html'):
     _config = json.dumps(r.blob)
     _ctx = {
         'appId': geoappid,
-        'appType': geoapp_obj.type,
+        'appType': geoapp_obj.resource_type,
         'config': _config,
         'user': request.user,
         'access_token': access_token,
@@ -337,6 +335,7 @@ def geoapp_metadata(request, geoappid, template='apps/app_metadata.html', ajax=T
 
     # Add metadata_author or poc if missing
     geoapp_obj.add_missing_metadata_author_or_poc()
+    resource_type = geoapp_obj.resource_type
     poc = geoapp_obj.poc
     metadata_author = geoapp_obj.metadata_author
     topic_category = geoapp_obj.category
@@ -454,6 +453,7 @@ def geoapp_metadata(request, geoappid, template='apps/app_metadata.html', ajax=T
         )
 
         geoapp_obj = geoapp_form.instance
+        geoapp_obj.resource_type = resource_type
         resource_manager.update(
             geoapp_obj.uuid,
             instance=geoapp_obj,

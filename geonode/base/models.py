@@ -637,7 +637,7 @@ class ResourceBaseManager(PolymorphicManager):
         return super().get_queryset()
 
     @staticmethod
-    def upload_files(resource_id, files):
+    def upload_files(resource_id, files, force=False):
         try:
             out = []
             for f in files:
@@ -648,6 +648,8 @@ class ResourceBaseManager(PolymorphicManager):
                         filename = os.path.basename(f)
                         file_uploaded_path = storage_manager.save(f'{folder}/{filename}', ff)
                         out.append(storage_manager.path(file_uploaded_path))
+                elif force:
+                    out.append(f)
 
             # making an update instead of save in order to avoid others
             # signal like post_save and commiunication with geoserver
@@ -938,7 +940,6 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
 
     # fields necessary for the apis
     thumbnail_url = models.TextField(_("Thumbnail url"), null=True, blank=True)
-    detail_url = models.CharField(max_length=255, null=True, blank=True)
     rating = models.IntegerField(default=0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -1061,6 +1062,10 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
     @property
     def raw_data_quality_statement(self):
         return self._remove_html_tags(self.data_quality_statement)
+
+    @property
+    def detail_url(self):
+        return self.get_absolute_url()
 
     def save(self, notify=False, *args, **kwargs):
         """
@@ -1364,20 +1369,23 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
                 return None
 
     def set_dirty_state(self):
-        self.dirty_state = True
-        ResourceBase.objects.filter(id=self.id).update(dirty_state=True)
+        if not self.dirty_state:
+            self.dirty_state = True
+            ResourceBase.objects.filter(id=self.id).update(dirty_state=True)
 
     def clear_dirty_state(self):
-        self.dirty_state = False
-        ResourceBase.objects.filter(id=self.id).update(dirty_state=False)
+        if self.dirty_state:
+            self.dirty_state = False
+            ResourceBase.objects.filter(id=self.id).update(dirty_state=False)
 
     def set_processing_state(self, state):
-        self.state = state
-        ResourceBase.objects.filter(id=self.id).update(state=state)
-        if state == enumerations.STATE_PROCESSED:
-            self.clear_dirty_state()
-        else:
-            self.set_dirty_state()
+        if self.state != state:
+            self.state = state
+            ResourceBase.objects.filter(id=self.id).update(state=state)
+            if state == enumerations.STATE_PROCESSED:
+                self.clear_dirty_state()
+            else:
+                self.set_dirty_state()
 
     @property
     def processed(self):
@@ -1397,6 +1405,9 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
                 return ''
         except Exception:
             return ''
+
+    def get_absolute_url(self):
+        return ''
 
     def set_bbox_polygon(self, bbox, srid):
         """
@@ -1635,10 +1646,15 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
                     image = None
 
             if upload_path and image:
-                name, ext = os.path.splitext(filename)
+                name = os.path.basename(filename)
                 remove_thumbs(name)
                 actual_name = storage_manager.save(upload_path, ContentFile(image))
-                url = storage_manager.url(actual_name)
+                actual_file_name = os.path.basename(actual_name)
+
+                if filename != actual_file_name:
+                    upload_path = upload_path.replace(filename, actual_file_name)
+
+                url = storage_manager.url(upload_path)
 
                 try:
                     # Optimize the Thumbnail size and resolution

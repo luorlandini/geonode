@@ -73,6 +73,7 @@ from geonode.geoserver.security import (
     purge_geofence_all,
     sync_geofence_with_guardian,
     sync_resources_with_guardian,
+    _get_gwc_filters_and_formats
 )
 
 from .utils import (
@@ -80,6 +81,9 @@ from .utils import (
     get_users_with_perms
 )
 
+from .permissions import (
+    PermSpec,
+    PermSpecCompact)
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +107,7 @@ class StreamToLogger:
             self.logger.log(self.log_level, line.rstrip())
 
 
-class SecurityTest(ResourceTestCaseMixin, GeoNodeBaseTestSupport):
+class SecurityTests(ResourceTestCaseMixin, GeoNodeBaseTestSupport):
 
     """
     Tests for the Geonode security app.
@@ -125,6 +129,7 @@ class SecurityTest(ResourceTestCaseMixin, GeoNodeBaseTestSupport):
         if check_ogc_backend(geoserver.BACKEND_PACKAGE):
             settings.OGC_SERVER['default']['GEOFENCE_SECURITY_ENABLED'] = True
 
+        self.maxDiff = None
         self.user = 'admin'
         self.passwd = 'admin'
         create_dataset_data()
@@ -600,6 +605,23 @@ class SecurityTest(ResourceTestCaseMixin, GeoNodeBaseTestSupport):
         layer = Dataset.objects.first()
         # grab bobby
         bobby = get_user_model().objects.get(username="bobby")
+        gf_services = _get_gf_services(layer, layer.get_all_level_info())
+        _, _, _disable_dataset_cache, _, _, _ = get_user_geolimits(layer, None, None, gf_services)
+        filters, formats = _get_gwc_filters_and_formats([_disable_dataset_cache])
+        self.assertListEqual(filters, [{
+            "styleParameterFilter": {
+                "STYLES": ""
+            }
+        }])
+        self.assertListEqual(formats, [
+            'application/json;type=utfgrid',
+            'image/gif',
+            'image/jpeg',
+            'image/png',
+            'image/png8',
+            'image/vnd.jpeg-png',
+            'image/vnd.jpeg-png8'
+        ])
 
         geo_limit, _ = UserGeoLimit.objects.get_or_create(
             user=bobby,
@@ -611,6 +633,11 @@ class SecurityTest(ResourceTestCaseMixin, GeoNodeBaseTestSupport):
         geo_limit.save()
         layer.users_geolimits.add(geo_limit)
         self.assertEqual(layer.users_geolimits.all().count(), 1)
+        gf_services = _get_gf_services(layer, layer.get_all_level_info())
+        _, _, _disable_dataset_cache, _, _, _ = get_user_geolimits(layer, bobby, None, gf_services)
+        filters, formats = _get_gwc_filters_and_formats([_disable_dataset_cache])
+        self.assertIsNone(filters)
+        self.assertIsNone(formats)
 
         perm_spec = {
             "users": {"bobby": ["view_resourcebase"]}, "groups": []}
@@ -1602,8 +1629,152 @@ class SecurityTest(ResourceTestCaseMixin, GeoNodeBaseTestSupport):
             user=get_user_model().objects.get(username=self.user))
         self.assertIn(x.title, list(actual.values_list('title', flat=True)))
 
+    def test_perm_spec_conversion(self):
+        """
+        Perm Spec from extended to cmpact and viceversa
+        """
+        standard_user = get_user_model().objects.get(username="bobby")
+        dataset = Dataset.objects.filter(owner=standard_user).first()
+        perm_spec = {
+            'users': {
+                'AnonymousUser': [
+                    'view_resourcebase'
+                ],
+                'bobby': [
+                    'view_resourcebase',
+                    'download_resourcebase',
+                    'change_dataset_style'
+                ]
+            },
+            'groups': {}
+        }
 
-class SecurityRulesTest(TestCase):
+        _p = PermSpec(perm_spec, dataset)
+        self.assertDictEqual(
+            json.loads(str(_p)),
+            {
+                "users":
+                    {
+                        "AnonymousUser": ["view_resourcebase"],
+                        "bobby":
+                            [
+                                "view_resourcebase",
+                                "download_resourcebase",
+                                "change_dataset_style"
+                        ]
+                    },
+                "groups": {}
+            }
+        )
+
+        self.assertDictEqual(
+            _p.compact,
+            {
+                'users':
+                [
+                    {
+                        'id': standard_user.id,
+                        'username': standard_user.username,
+                        'first_name': standard_user.first_name,
+                        'last_name': standard_user.last_name,
+                        'avatar': 'https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e/?s=240',
+                        'permissions': 'owner'
+                    }
+                ],
+                'organizations': [],
+                'groups':
+                [
+                    {
+                        'id': 2,
+                        'title': 'anonymous',
+                        'name': 'anonymous',
+                        'permissions': 'view'
+                    },
+                    {
+                        'id': 3,
+                        'logo': f'{settings.SITEURL}static/geonode/img/missing_thumb.png',
+                        'name': 'registered-members',
+                        'permissions': 'none',
+                        'title': 'Registered Members'
+                    }
+                ]
+            }
+        )
+
+        _pp = PermSpecCompact(_p.compact, dataset)
+        self.assertDictEqual(
+            _pp.extended,
+            {
+                'users':
+                    {
+                        'bobby':
+                        [
+                            'change_dataset_data',
+                            'change_dataset_style',
+                            'change_resourcebase_metadata',
+                            'delete_resourcebase',
+                            'change_resourcebase_permissions',
+                            'publish_resourcebase',
+                            'change_resourcebase',
+                            'view_resourcebase',
+                            'download_resourcebase'
+                        ],
+                        'AnonymousUser': ['view_resourcebase']
+                    },
+                'groups':
+                    {
+                        'anonymous': ['view_resourcebase'],
+                        'registered-members': []
+                    }
+            }
+        )
+
+        _pp2 = PermSpecCompact(
+            {
+                "users":
+                    [
+                        {
+                            'id': standard_user.id,
+                            'username': standard_user.username,
+                            'first_name': standard_user.first_name,
+                            'last_name': standard_user.last_name,
+                            'avatar': 'https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e/?s=240',
+                            'permissions': 'view'
+                        }
+                    ]
+            },
+            dataset
+        )
+        _pp.merge(_pp2)
+        self.assertDictEqual(
+            _pp.extended,
+            {
+                'users':
+                    {
+                        'bobby':
+                        [
+                            'change_dataset_data',
+                            'change_dataset_style',
+                            'change_resourcebase_metadata',
+                            'delete_resourcebase',
+                            'change_resourcebase_permissions',
+                            'publish_resourcebase',
+                            'change_resourcebase',
+                            'view_resourcebase',
+                            'download_resourcebase'
+                        ],
+                        'AnonymousUser': ['view_resourcebase']
+                    },
+                'groups':
+                    {
+                        'anonymous': ['view_resourcebase'],
+                        'registered-members': []
+                    }
+            }
+        )
+
+
+class SecurityRulesTests(TestCase):
     """
     Test resources synchronization with Guardian and dirty states cleaning
     """

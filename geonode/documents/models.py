@@ -28,6 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
+from geonode.client.hooks import hookset
 from geonode.maps.models import Map
 from geonode.layers.models import Dataset
 from geonode.base.models import ResourceBase
@@ -56,7 +57,7 @@ class Document(ResourceBase):
         return str(self.title)
 
     def get_absolute_url(self):
-        return reverse('document_detail', args=(self.id,))
+        return hookset.document_detail_url(self)
 
     @property
     def name(self):
@@ -91,7 +92,7 @@ class Document(ResourceBase):
         elif self.files:
             return urljoin(
                 settings.SITEURL,
-                reverse('document_download', args=(self.id,))
+                reverse('document_link', args=(self.id,))
             )
 
     @property
@@ -125,7 +126,7 @@ class Document(ResourceBase):
 
     @property
     def embed_url(self):
-        return reverse('document_link', args=(self.id,))
+        return self.href
 
     class Meta(ResourceBase.Meta):
         pass

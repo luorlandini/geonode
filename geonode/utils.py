@@ -1622,13 +1622,14 @@ class HttpClient:
                 msg = f"Request exception [{e}] - TOUT [{_req_tout}] to URL: {url} - headers: {headers}"
                 logger.exception(Exception(msg))
                 response = None
+                content = str(e)
         else:
             response = session.get(url, headers=headers, timeout=self.timeout)
-
-        try:
-            content = ensure_string(response.content) if not stream else response.raw
-        except Exception:
-            content = None
+        if response:
+            try:
+                content = ensure_string(response.content) if not stream else response.raw
+            except Exception as e:
+                content = str(e)
 
         return (response, content)
 
@@ -2278,3 +2279,9 @@ def find_by_attr(lst, val, attr="id"):
             return item
 
     return None
+
+
+def build_absolute_uri(url):
+    if url and 'http' not in url:
+        url = urljoin(settings.SITEURL, url)
+    return url
