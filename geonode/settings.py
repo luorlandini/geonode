@@ -219,6 +219,7 @@ _DEFAULT_LANGUAGES = """(
     ('zh-cn', '中文'),
     ('ja', '日本語'),
     ('ko', '한국어'),
+    ('sk', 'Slovensky'),
 )"""
 
 LANGUAGES = ast.literal_eval(os.getenv('LANGUAGES', _DEFAULT_LANGUAGES))
@@ -450,7 +451,6 @@ GEONODE_INTERNAL_APPS = (
     'geonode.upload',
     'geonode.tasks',
     'geonode.messaging',
-    'geonode.monitoring',
 )
 
 GEONODE_CONTRIB_APPS = (

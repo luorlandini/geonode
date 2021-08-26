@@ -185,7 +185,9 @@ class RegionViewSet(WithDynamicViewSetMixin, ListModelMixin, RetrieveModelMixin,
     API endpoint that lists regions.
     """
     permission_classes = [AllowAny, ]
-    filter_backends = [DynamicSearchFilter, ]
+    filter_backends = [
+        DynamicFilterBackend, DynamicSortingFilter, DynamicSearchFilter
+    ]
     queryset = Region.objects.all()
     serializer_class = RegionSerializer
     pagination_class = GeoNodeApiPagination
@@ -196,7 +198,9 @@ class HierarchicalKeywordViewSet(WithDynamicViewSetMixin, ListModelMixin, Retrie
     API endpoint that lists hierarchical keywords.
     """
     permission_classes = [AllowAny, ]
-    filter_backends = [DynamicSearchFilter, ]
+    filter_backends = [
+        DynamicFilterBackend, DynamicSortingFilter, DynamicSearchFilter
+    ]
     queryset = HierarchicalKeyword.objects.all()
     serializer_class = HierarchicalKeywordSerializer
     pagination_class = GeoNodeApiPagination
@@ -207,7 +211,9 @@ class ThesaurusKeywordViewSet(WithDynamicViewSetMixin, ListModelMixin, RetrieveM
     API endpoint that lists Thesaurus keywords.
     """
     permission_classes = [AllowAny, ]
-    filter_backends = [DynamicSearchFilter, ]
+    filter_backends = [
+        DynamicFilterBackend, DynamicSortingFilter, DynamicSearchFilter
+    ]
     queryset = ThesaurusKeyword.objects.all()
     serializer_class = ThesaurusKeywordSerializer
     pagination_class = GeoNodeApiPagination
@@ -218,7 +224,9 @@ class TopicCategoryViewSet(WithDynamicViewSetMixin, ListModelMixin, RetrieveMode
     API endpoint that lists categories.
     """
     permission_classes = [AllowAny, ]
-    filter_backends = [DynamicSearchFilter, ]
+    filter_backends = [
+        DynamicFilterBackend, DynamicSortingFilter, DynamicSearchFilter
+    ]
     queryset = TopicCategory.objects.all()
     serializer_class = TopicCategorySerializer
     pagination_class = GeoNodeApiPagination
@@ -230,7 +238,9 @@ class OwnerViewSet(WithDynamicViewSetMixin, ListModelMixin, RetrieveModelMixin, 
     """
     authentication_classes = [SessionAuthentication, BasicAuthentication, OAuth2Authentication]
     permission_classes = [AllowAny, ]
-    filter_backends = [DynamicSearchFilter, ]
+    filter_backends = [
+        DynamicFilterBackend, DynamicSortingFilter, DynamicSearchFilter
+    ]
     serializer_class = OwnerSerializer
     pagination_class = GeoNodeApiPagination
 
@@ -957,10 +967,10 @@ class ResourceBaseViewSet(DynamicModelViewSet):
             IsAuthenticated,
         ])
     def resource_service_copy(self, request, pk=None):
-        """Instructs the Async dispatcher to execute a 'COPY' operation over a valid 'uuid'
+        """Instructs the Async dispatcher to execute a 'COPY' operation over a valid 'pk'
 
         - PUT input_params: {
-            id: "<str: ID>"
+            instance: "<str: ID>"
             owner: "<str: username = <current_user>>"
             defaults: dict = {}
         }
@@ -979,7 +989,7 @@ class ResourceBaseViewSet(DynamicModelViewSet):
 
         Sample Request:
 
-        1. curl -v -X PUT -u admin:admin -H "Content-Type: application/json" -d 'vals={"title":"pippo"}' http://localhost:8000/api/v2/resources/<id>/copy
+        1. curl -v -X PUT -u admin:admin -H "Content-Type: application/json" -d 'defaults={"title":"pippo"}' http://localhost:8000/api/v2/resources/<id>/copy
             OUTPUT: {
                 "status":"ready",
                 "execution_id":"08846e84-eae4-11eb-84be-00155d41f2fb",
@@ -1016,7 +1026,7 @@ class ResourceBaseViewSet(DynamicModelViewSet):
                 user=request.user,
                 func_name='copy',
                 input_params={
-                    "uuid": request_params.get('uuid', resource.uuid),
+                    "instance": resource.id,
                     "owner": request_params.get('owner', request.user.username),
                     "defaults": request_params.get('defaults', '{}')
                 }
